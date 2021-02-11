@@ -1,0 +1,127 @@
+name: SimpleCommandSet
+main: org.yingye.scs.core.Core
+version: 0.1.0
+commands:
+  tpa:
+    permission: scs.tpa.tpa
+
+  tpahere:
+    permission: scs.tpa.tpahere
+
+  accept:
+    permission: scs.tpa.accept
+
+  deaccept:
+    permission: scs.tpa.deaccept
+
+  tpclear:
+    permission: scs.tpa.tpclear
+
+  back:
+    permission: scs.back
+
+  fly:
+    permission: scs.fly
+
+  god:
+    permission: scs.god
+
+  home:
+    permission: scs.home.home
+
+  sethome:
+    permission: scs.home.sethome
+
+  delhome:
+    permission: scs.home.delhome
+
+  ohk:
+    permission: scs.debug.ohk
+
+  hb:
+    permission: scs.debug.hb
+
+  cl:
+    permission: scs.debug.cl
+
+  wtr:
+    permission: scs.debug.wtr
+
+  weatherlock:
+    permission: scs.world.weatherlock
+
+  weatherunlock:
+    permission: scs.world.weatherunlock
+
+permissions:
+  # 权限集
+  scs.tpa.*:
+    children:
+      tpa: true
+      tpahere: true
+      accept: true
+      deaccept: true
+      tpclear: true
+  scs.home.*:
+    children:
+      home: true
+      sethome: true
+      delhome: true
+  scs.debug.*:
+    children:
+      ohk: true
+      hb: true
+      cl: true
+      wtr: true
+  scs.world.*:
+    children:
+      weatherlock: true
+      weatherunlock: true
+
+  # tpa
+  scs.tpa.tpa:
+    default: true
+  scs.tpa.tpahere:
+    default: true
+  scs.tpa.accept:
+    default: true
+  scs.tpa.deaccept:
+    default: true
+  scs.tpa.tpclear:
+    default: true
+
+  # home
+  scs.home.home:
+    default: true
+  scs.home.sethome:
+    default: true
+  scs.home.delhome:
+    default: true
+
+  # debug
+  scs.debug.ohk:
+    default: op
+  scs.debug.hb:
+    default: op
+  scs.debug.cl:
+    default: op
+  scs.debug.wtr:
+    default: op
+
+  # back
+  scs.back:
+    default: true
+
+  # fly
+  scs.fly:
+    default: op
+
+  # god
+  scs.god:
+    default: op
+
+  # world
+  scs.world.weatherlock:
+    default: op
+  scs.world.weatherunlock:
+    default: op

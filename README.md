@@ -1,0 +1,2 @@
+# SimpleCommandSet
+一个适用于PaperMC的基础功能插件

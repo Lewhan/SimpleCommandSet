@@ -1,0 +1,11 @@
+tpa:
+  # tpa,tpahere 等待时间
+  teleportWaitTime: 3
+  # tpa,tpahere 的使用间隔时间
+  teleportCdTime: 5
+  # tpa,tpahere 超时时间
+  teleportOutTime: 60
+
+home:
+  # home地址文件存放位置
+  savepath: ./plugins/SimpleCommandSet/data/
