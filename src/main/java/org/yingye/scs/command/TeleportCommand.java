@@ -195,9 +195,9 @@ public class TeleportCommand implements CommandExecutor {
     }
 
     List<ArrayList<String>> keys = DATA.keySet()
-            .stream()
-            .filter(al -> al.get(0).equals(sourceName) && al.get(1).equals(player.getDisplayName()))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(al -> al.get(0).equals(sourceName) && al.get(1).equals(player.getDisplayName()))
+        .collect(Collectors.toList());
     if (keys.size() <= 0) {
       player.sendMessage(ChatColor.GREEN + "未找到玩家(" + ChatColor.AQUA + sourceName + ChatColor.GREEN + ")对您发送的请求");
       return;
@@ -216,9 +216,9 @@ public class TeleportCommand implements CommandExecutor {
    */
   private void accept(Server server, Player player) {
     List<ArrayList<String>> keys = DATA.keySet()
-            .stream()
-            .filter(al -> al.get(1).equals(player.getDisplayName()))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(al -> al.get(1).equals(player.getDisplayName()))
+        .collect(Collectors.toList());
     if (keys.size() <= 0) {
       player.sendMessage(ChatColor.GREEN + "没有待处理的请求");
       return;
@@ -324,9 +324,9 @@ public class TeleportCommand implements CommandExecutor {
     }
 
     List<ArrayList<String>> collect = DATA.keySet()
-            .stream()
-            .filter(al -> al.get(0).equals(sourceName) && al.get(1).equals(player.getDisplayName()))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(al -> al.get(0).equals(sourceName) && al.get(1).equals(player.getDisplayName()))
+        .collect(Collectors.toList());
     if (collect.size() <= 0) {
       player.sendMessage(ChatColor.GREEN + "未找到玩家(" + ChatColor.AQUA + sourceName + ChatColor.GREEN + ")对您发送的请求");
       return;
@@ -378,9 +378,9 @@ public class TeleportCommand implements CommandExecutor {
    */
   private void clearTeleportRequest(Player player, Server server, String sourceName) {
     List<ArrayList<String>> keys = DATA.keySet()
-            .stream()
-            .filter(al -> al.get(1).equals(player.getDisplayName()) && al.get(0).equals(sourceName))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(al -> al.get(1).equals(player.getDisplayName()) && al.get(0).equals(sourceName))
+        .collect(Collectors.toList());
     keys.forEach(strings -> {
       BukkitRunnable bukkitRunnable = DATA.remove(strings);
       sendDeAcceptMessage(bukkitRunnable, player, server.getPlayerExact(sourceName), sourceName, strings.get(2));
@@ -395,9 +395,9 @@ public class TeleportCommand implements CommandExecutor {
    */
   private void clearTeleportRequest(Player player, Server server) {
     List<ArrayList<String>> keys = DATA.keySet()
-            .stream()
-            .filter(al -> al.get(1).equals(player.getDisplayName()))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(al -> al.get(1).equals(player.getDisplayName()))
+        .collect(Collectors.toList());
     keys.forEach(strings -> {
       BukkitRunnable bukkitRunnable = DATA.remove(strings);
       sendDeAcceptMessage(bukkitRunnable, player, server.getPlayerExact(strings.get(0)), strings.get(0), strings.get(2));

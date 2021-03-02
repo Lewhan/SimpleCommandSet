@@ -8,6 +8,7 @@ import org.yingye.scs.listener.*;
 import org.yingye.scs.tabcomplete.FlyTabCompleter;
 import org.yingye.scs.tabcomplete.HomeTabCompleter;
 import org.yingye.scs.tabcomplete.TeleportTabCompleter;
+import org.yingye.scs.tabcomplete.WorldCompleter;
 
 import java.io.File;
 
@@ -75,8 +76,8 @@ public class Core extends JavaPlugin {
     getCommand("wtr").setExecutor(new DebugCommand());
 
     // world
-    getCommand("weatherlock").setExecutor(new WorldCommand());
-    getCommand("weatherunlock").setExecutor(new WorldCommand());
+    getCommand("weatherlock").setExecutor(new WeatherCommand(this));
+    getCommand("weatherunlock").setExecutor(new WeatherCommand(this));
   }
 
   private void loadTabCompleter() {
@@ -91,15 +92,16 @@ public class Core extends JavaPlugin {
     getCommand("home").setTabCompleter(new HomeTabCompleter());
     getCommand("sethome").setTabCompleter(new HomeTabCompleter());
     getCommand("delhome").setTabCompleter(new HomeTabCompleter());
+
+    getCommand("weatherlock").setTabCompleter(new WorldCompleter());
+    getCommand("weatherunlock").setTabCompleter(new WorldCompleter());
   }
 
   private void loadListener() {
     getServer().getPluginManager().registerEvents(new TeleportListener(), this);
     getServer().getPluginManager().registerEvents(new DeadListener(), this);
     getServer().getPluginManager().registerEvents(new GodListener(), this);
-//    getServer().getPluginManager().registerEvents(new MoveListener(), this);
     getServer().getPluginManager().registerEvents(new CommandListener(), this);
-    getServer().getPluginManager().registerEvents(new WeatherListener(), this);
 
     getServer().getPluginManager().registerEvents(new DebugCommandListener(), this);
   }

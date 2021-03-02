@@ -24,17 +24,15 @@ public class FlyTabCompleter implements TabCompleter {
   @Override
   public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
     ArrayList<String> list = new ArrayList<>();
-    if (sender.isOp()) {
-      if (args.length == 1) {
-        Server server = sender.getServer();
-        ArrayList<? extends Player> players = new ArrayList<>(server.getOnlinePlayers());
-        for (Player player : players) {
-          list.add(player.getDisplayName());
-        }
-      } else if (args.length == 2) {
-        list.add("on");
-        list.add("off");
+    if (args.length == 1) {
+      Server server = sender.getServer();
+      ArrayList<? extends Player> players = new ArrayList<>(server.getOnlinePlayers());
+      for (Player player : players) {
+        list.add(player.getDisplayName());
       }
+    } else if (args.length == 2) {
+      list.add("on");
+      list.add("off");
     }
     return list;
   }
