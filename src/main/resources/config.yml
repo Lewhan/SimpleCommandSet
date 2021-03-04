@@ -9,3 +9,7 @@ tpa:
 home:
   # home地址文件存放位置
   savepath: ./plugins/SimpleCommandSet/data/
+
+weather:
+  # 隔多久运行一次天气锁定
+  second: 1200

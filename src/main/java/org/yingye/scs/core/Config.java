@@ -14,6 +14,7 @@ public class Config {
   public static int teleportCdTime;
   public static int teleportOutTime;
   public static String homeSavePath;
+  public static int weatherSecond;
 
   public static void loadConfig() {
     File file = new File("./plugins/SimpleCommandSet/config.yml");
@@ -28,6 +29,10 @@ public class Config {
     // 获取home相关的设置
     ConfigurationSection home = configuration.getConfigurationSection("home");
     homeSavePath = home.getString("savepath");
+
+    // 获取weather相关的设置
+    ConfigurationSection weather = configuration.getConfigurationSection("weather");
+    weatherSecond = weather.getInt("second");
   }
 
   public static YamlConfiguration getHomeConfig(String playerName) {

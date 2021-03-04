@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.yingye.scs.core.Config;
 import org.yingye.scs.status.Weather;
 
 import java.util.HashMap;
@@ -153,20 +154,8 @@ public class WeatherCommand implements CommandExecutor {
 
   private void monitor(World world) {
     world.setWeatherDuration(20);
-    BukkitRunnable runnable = createRunnable(world);
-    runnable.runTaskLater(plugin, world.getWeatherDuration());
-    MONITORS.put(world, runnable);
-  }
-
-  private void monitor(World world, int tick) {
-    BukkitRunnable runnable = createRunnable(world);
-    runnable.runTaskLater(plugin, tick);
-    System.out.println("下一次天气时间重置在: " + tick / 20 + " 秒之后");
-    MONITORS.put(world, runnable);
-  }
-
-  private BukkitRunnable createRunnable(World world) {
-    return new BukkitRunnable() {
+    int tick = Config.weatherSecond * 20;
+    BukkitRunnable runnable = new BukkitRunnable() {
       @Override
       public void run() {
         Weather weather = LOCKED_WORLD.get(world);
@@ -180,10 +169,11 @@ public class WeatherCommand implements CommandExecutor {
           world.setStorm(true);
           world.setThundering(true);
         }
-        world.setWeatherDuration(1200 * 20);
-        monitor(world, world.getWeatherDuration());
+        world.setWeatherDuration(tick);
       }
     };
+    runnable.runTaskTimer(plugin, world.getWeatherDuration(), tick - 20);
+    MONITORS.put(world, runnable);
   }
 
 }
