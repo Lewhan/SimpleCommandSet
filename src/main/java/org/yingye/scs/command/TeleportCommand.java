@@ -30,6 +30,11 @@ public class TeleportCommand implements CommandExecutor {
    */
   private static final HashMap<ArrayList<String>, BukkitRunnable> DESTROY = new HashMap<>();
 
+  /**
+   * 进入命令冷却状态的玩家
+   */
+  private static final HashSet<Player> WAIT = new HashSet<>();
+
   public TeleportCommand(JavaPlugin plugin) {
     this.plugin = plugin;
   }
@@ -76,6 +81,11 @@ public class TeleportCommand implements CommandExecutor {
    * @param args   附加的参数
    */
   private void teleport(Player player, String label, String[] args) {
+    if (label.equalsIgnoreCase("tpa") && WAIT.contains(player)) {
+      player.sendMessage("tpa命令的使用间隔为: " + Config.teleport.get("cdTime") + " 秒");
+      return;
+    }
+
     Server server = player.getServer();
     // 判断参数长度是否有传入玩家名
     if (args.length <= 0) {
@@ -114,6 +124,15 @@ public class TeleportCommand implements CommandExecutor {
     player.sendMessage(ChatColor.GREEN + "请求已发送");
     if (label.equalsIgnoreCase("tpa")) {
       targetPlayer.sendMessage(ChatColor.GREEN + "玩家(" + ChatColor.AQUA + player.getDisplayName() + ChatColor.GREEN + ")请求传送到你这");
+      // 进入命令冷却期
+      WAIT.add(player);
+      // 指定秒数之后恢复
+      new BukkitRunnable() {
+        @Override
+        public void run() {
+          WAIT.remove(player);
+        }
+      }.runTaskLater(plugin, Config.teleport.get("cdTime") * 20);
     } else {
       targetPlayer.sendMessage(ChatColor.GREEN + "玩家(" + ChatColor.AQUA + player.getDisplayName() + ChatColor.GREEN + ")邀请你过去");
     }

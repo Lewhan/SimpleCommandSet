@@ -64,7 +64,7 @@ public class DebugCommand implements CommandExecutor {
     AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
     attribute.setBaseValue(health);
     player.setHealth(health);
-    sender.sendMessage(ChatColor.GREEN + "成功将玩家(" + ChatColor.AQUA + args[0] + ChatColor.GREEN + ")的基础血量设置为: " + health);
+    sender.sendMessage(ChatColor.GREEN + "成功将玩家(" + ChatColor.AQUA + args[0] + ChatColor.GREEN + ")的血量设置为: " + health);
   }
 
   private void currentLocation(Player player) {

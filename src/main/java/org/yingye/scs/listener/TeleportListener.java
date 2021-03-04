@@ -14,10 +14,6 @@ public class TeleportListener implements Listener {
 
   @EventHandler
   public void onTeleport(PlayerTeleportEvent teleportEvent) {
-    // 获取传送前的位置
-//    Location from = teleportEvent.getFrom();
-    // 获取传送后的位置
-//    Location to = teleportEvent.getTo();
     Location location = teleportEvent.getFrom();
     Player player = teleportEvent.getPlayer();
     try {
