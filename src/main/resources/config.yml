@@ -1,15 +1,15 @@
-tpa:
+teleport:
   # tpa,tpahere 等待时间
-  teleportWaitTime: 3
+  waitTime: 3
   # tpa,tpahere 的使用间隔时间
-  teleportCdTime: 5
+  cdTime: 5
   # tpa,tpahere 超时时间
-  teleportOutTime: 60
+  timeout: 60
 
 home:
   # home地址文件存放位置
-  savepath: ./plugins/SimpleCommandSet/data/
+  savePath: "./plugins/SimpleCommandSet/data/"
 
 weather:
   # 隔多久运行一次天气锁定
-  second: 1200
+  switchSecond: 1200

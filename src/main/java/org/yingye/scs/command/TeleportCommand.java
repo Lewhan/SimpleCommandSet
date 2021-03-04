@@ -137,7 +137,7 @@ public class TeleportCommand implements CommandExecutor {
     };
 
     // 设置多少秒后自动执行销毁TP用的Runnable
-    destroy.runTaskLater(plugin, Config.teleportOutTime * 20L);
+    destroy.runTaskLater(plugin, Config.teleport.get("timeout") * 20L);
 
     // 将销毁用的Runnable放入DESTROY中，当接收或拒绝请求的时候，取消并删除该Runnable
     DESTROY.put(param, destroy);
@@ -241,9 +241,9 @@ public class TeleportCommand implements CommandExecutor {
    */
   private void sendAcceptMessage(BukkitRunnable runnable, BukkitRunnable destroy, Player player, Player source, String method) {
     player.sendMessage(ChatColor.GREEN + "你接受了玩家(" + ChatColor.AQUA + source.getDisplayName() + ChatColor.GREEN + ")的 " + method + " 请求");
-    source.sendMessage(ChatColor.GREEN + "玩家(" + ChatColor.AQUA + player.getDisplayName() + ChatColor.GREEN + ")接受了你的 " + method + " 请求,将在" + Config.teleportWaitTime + "秒后进行传送");
+    source.sendMessage(ChatColor.GREEN + "玩家(" + ChatColor.AQUA + player.getDisplayName() + ChatColor.GREEN + ")接受了你的 " + method + " 请求,将在" + Config.teleport.get("waitTime") + "秒后进行传送");
     destroy.cancel();
-    runnable.runTaskLater(plugin, Config.teleportWaitTime * 20L);
+    runnable.runTaskLater(plugin, Config.teleport.get("waitTime") * 20L);
   }
 
   /**

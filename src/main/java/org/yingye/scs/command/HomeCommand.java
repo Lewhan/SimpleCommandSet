@@ -35,11 +35,11 @@ public class HomeCommand implements CommandExecutor {
       return;
     } else {
       try {
-        File dir = new File(Config.homeSavePath);
+        File dir = new File(Config.home.get("savePath").toString());
         if (!dir.exists()) {
           dir.mkdirs();
         }
-        File homeFile = new File(Config.homeSavePath + player.getDisplayName() + ".yml");
+        File homeFile = new File(Config.home.get("savePath").toString() + player.getDisplayName() + ".yml");
         YamlConfiguration config = new YamlConfiguration();
         if (homeFile.exists()) {
           config = YamlConfiguration.loadConfiguration(homeFile);
@@ -63,7 +63,7 @@ public class HomeCommand implements CommandExecutor {
       player.sendMessage(ChatColor.RED + "未输入家的名字");
       return;
     } else {
-      File homeFile = new File(Config.homeSavePath + player.getDisplayName() + ".yml");
+      File homeFile = new File(Config.home.get("savePath").toString() + player.getDisplayName() + ".yml");
       // 判断文件存不存在
       if (!homeFile.exists()) {
         player.sendMessage(ChatColor.RED + "没有这个家");
