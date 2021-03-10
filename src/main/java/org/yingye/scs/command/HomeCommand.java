@@ -59,7 +59,7 @@ public class HomeCommand implements CommandExecutor {
   }
 
   private void home(Player player, String[] args, String label) {
-    if (args.length != 1) {
+    if (args.length < 1) {
       player.sendMessage(ChatColor.RED + "未输入家的名字");
       return;
     } else {
@@ -80,8 +80,9 @@ public class HomeCommand implements CommandExecutor {
         player.sendMessage(ChatColor.RED + "没有这个家");
         return;
       }
+      // 如果输入的是home，则进行home的传送，如果是delhome，则删除这个家
       if (label.equalsIgnoreCase("home")) {
-        Location serializable = root.getSerializable(args[0], Location.class);
+        Location serializable = root.getLocation(args[0]);
         if (serializable == null) {
           player.sendMessage(ChatColor.RED + "无法回到这个家");
         } else {

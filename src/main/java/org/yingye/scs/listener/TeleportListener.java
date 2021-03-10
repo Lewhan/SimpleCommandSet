@@ -17,7 +17,7 @@ public class TeleportListener implements Listener {
     Location location = teleportEvent.getFrom();
     Player player = teleportEvent.getPlayer();
     try {
-      YamlConfiguration config = Config.getHomeConfig(player.getDisplayName());
+      YamlConfiguration config = Config.getHomeConfig(player);
       ConfigurationSection root = config.createSection("back");
       root.set("back", location);
       Config.saveHomeConfig(config, player);

@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.yingye.scs.core.Config;
+import org.yingye.scs.util.SimpleUtil;
 
 import java.util.logging.Logger;
 
@@ -27,21 +28,23 @@ public class BackCommand implements CommandExecutor {
       logger.info(ChatColor.RED + " 该命令只能由玩家使用");
     } else {
       Player player = (Player) sender;
-      YamlConfiguration config = Config.getHomeConfig(player.getDisplayName());
-      ConfigurationSection root = config.getConfigurationSection("back");
-      if (root != null) {
-        if (root.contains("back")) {
-          Location location = root.getSerializable("back", Location.class);
-          if (location != null) {
-            player.teleport(location);
+      YamlConfiguration config = Config.getHomeConfig(player);
+      if (config != null) {
+        ConfigurationSection root = config.getConfigurationSection("back");
+        if (root != null) {
+          if (root.contains("back")) {
+            Location location = SimpleUtil.createLocation(sender.getServer(), root.getConfigurationSection("back"));
+            if (location != null) {
+              player.teleport(location);
+            } else {
+              player.sendMessage(ChatColor.RED + "暂无返回点");
+            }
           } else {
-            player.sendMessage(ChatColor.RED + "无法返回到上一个位置");
+            player.sendMessage(ChatColor.RED + "暂无返回点");
           }
         } else {
-          player.sendMessage(ChatColor.RED + "无法返回到上一个位置");
+          player.sendMessage(ChatColor.RED + "暂无返回点");
         }
-      } else {
-        player.sendMessage(ChatColor.RED + "无法返回到上一个位置");
       }
     }
     return true;

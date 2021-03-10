@@ -25,10 +25,12 @@ public class HomeTabCompleter implements TabCompleter {
         if (!homeFile.exists()) {
           return options;
         } else {
-          YamlConfiguration config = YamlConfiguration.loadConfiguration(homeFile);
-          ConfigurationSection root = config.getConfigurationSection("home");
-          if (root != null) {
-            options = new ArrayList<>(root.getKeys(true));
+          YamlConfiguration config = Config.getHomeConfig(player);
+          if (config != null) {
+            ConfigurationSection root = config.getConfigurationSection("home");
+            if (root != null) {
+              options = new ArrayList<>(root.getKeys(false));
+            }
           }
         }
       }

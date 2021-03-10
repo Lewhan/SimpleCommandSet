@@ -70,6 +70,13 @@ public class WorldCommand implements CommandExecutor {
     createWorld(sender, worldName, type);
   }
 
+  /**
+   * 创建一个世界
+   *
+   * @param sender    操作者
+   * @param worldName 世界名
+   * @param type      世界类型
+   */
   private void createWorld(CommandSender sender, String worldName, String type) {
     WorldCreator creator = new WorldCreator(worldName);
     World.Environment environment = WORLD_TYPE.get(type);
@@ -103,6 +110,11 @@ public class WorldCommand implements CommandExecutor {
     }.runTaskLater(plugin, 20);
   }
 
+  /**
+   * @param sender    命令触发者
+   * @param worldName 要删除的世界名
+   * @param destroy   是否真的删除，如果为false，则会在下次创建同名世界的时候直接挂载上
+   */
   private void deleteWorld(CommandSender sender, String worldName, String destroy) {
     World world = sender.getServer().getWorld(worldName);
     if (world == null) {
@@ -116,6 +128,11 @@ public class WorldCommand implements CommandExecutor {
     }
   }
 
+  /**
+   * 删除世界对应的文件夹
+   *
+   * @param file 世界对应的资源文件夹
+   */
   private void removeDir(File file) {
     if (file.isDirectory()) {
       File[] files = file.listFiles();
@@ -130,6 +147,12 @@ public class WorldCommand implements CommandExecutor {
     file.delete();
   }
 
+  /**
+   * 世界传送
+   *
+   * @param player    触发命令的玩家
+   * @param worldName 要传送到哪个世界
+   */
   private void tpWorld(Player player, String worldName) {
     World world = player.getServer().getWorld(worldName);
     if (world == null) {

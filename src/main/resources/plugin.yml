@@ -1,6 +1,6 @@
 name: SimpleCommandSet
 main: org.yingye.scs.core.Core
-version: 0.1.2
+version: 0.1.3
 commands:
   tpa:
     permission: scs.tpa.tpa
