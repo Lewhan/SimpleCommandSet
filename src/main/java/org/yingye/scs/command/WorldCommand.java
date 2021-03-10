@@ -1,15 +1,142 @@
 package org.yingye.scs.command;
 
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.util.Map;
+
+@SuppressWarnings("all")
 public class WorldCommand implements CommandExecutor {
 
-  @SuppressWarnings("all")
+  private Plugin plugin;
+
+  private static final Map<String, World.Environment> WORLD_TYPE =
+      Map.of("normal", World.Environment.NORMAL, "nether", World.Environment.NETHER, "end", World.Environment.THE_END);
+
+  public WorldCommand(Plugin plugin) {
+    this.plugin = plugin;
+  }
+
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    return false;
+    label = label.toLowerCase();
+    if (label.equals("world")) {
+      if (args.length > 0) {
+        world(sender, label, args);
+      } else {
+        sender.sendMessage(ChatColor.RED + "参数不足");
+      }
+    }
+    return true;
+  }
+
+  private void world(CommandSender sender, String command, String[] args) {
+    String label = args[0].toLowerCase();
+    if (label.equals("create")) {
+      createWorld(sender, args);
+    } else if (label.equals("delete")) {
+      deleteWorld(sender, args);
+    } else if (label.equals("tp")) {
+      if (sender instanceof Player) {
+        if (args.length > 1) {
+          tpWorld((Player) sender, args[1]);
+        }
+      } else {
+        sender.sendMessage("改命令只能由玩家使用");
+      }
+    }
+  }
+
+  private void createWorld(CommandSender sender, String[] args) {
+    if (args.length < 2) {
+      sender.sendMessage(ChatColor.RED + "参数不足");
+    } else if (args.length == 2) {
+      createWorld(sender, args[1]);
+    } else {
+      createWorld(sender, args[1], args[2]);
+    }
+  }
+
+  private void createWorld(CommandSender sender, String worldName) {
+    String type = "normal";
+    createWorld(sender, worldName, type);
+  }
+
+  private void createWorld(CommandSender sender, String worldName, String type) {
+    WorldCreator creator = new WorldCreator(worldName);
+    World.Environment environment = WORLD_TYPE.get(type);
+    if (environment == null) {
+      creator.environment(World.Environment.NORMAL);
+    } else {
+      creator.environment(environment);
+    }
+    sender.getServer().createWorld(creator);
+  }
+
+  private void deleteWorld(CommandSender sender, String[] args) {
+    String des = "";
+    if (args.length < 2) {
+      sender.sendMessage(ChatColor.RED + "参数不足");
+      return;
+    }
+
+    if (args.length > 2) {
+      des = args[2];
+    } else {
+      des = "true";
+    }
+
+    String why = des;
+    new BukkitRunnable() {
+      @Override
+      public void run() {
+        deleteWorld(sender, args[1], why);
+      }
+    }.runTaskLater(plugin, 20);
+  }
+
+  private void deleteWorld(CommandSender sender, String worldName, String destroy) {
+    World world = sender.getServer().getWorld(worldName);
+    if (world == null) {
+      sender.sendMessage(ChatColor.RED + "没有找到该世界");
+      return;
+    }
+    sender.getServer().unloadWorld(world, true);
+    if (destroy.equals("true")) {
+      File file = world.getWorldFolder();
+      removeDir(file);
+    }
+  }
+
+  private void removeDir(File file) {
+    if (file.isDirectory()) {
+      File[] files = file.listFiles();
+      if (files.length == 0) {
+        file.delete();
+      } else {
+        for (File f : files) {
+          removeDir(f);
+        }
+      }
+    }
+    file.delete();
+  }
+
+  private void tpWorld(Player player, String worldName) {
+    World world = player.getServer().getWorld(worldName);
+    if (world == null) {
+      player.sendMessage(ChatColor.RED + "没有找到这个世界");
+    } else {
+      player.teleport(world.getSpawnLocation());
+    }
   }
 
 }

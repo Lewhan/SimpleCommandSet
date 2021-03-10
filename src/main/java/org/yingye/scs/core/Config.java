@@ -6,26 +6,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("all")
 public class Config {
 
-  public static Map<String, Integer> teleport = new HashMap<>();
-  public static Map<String, Object> home = new HashMap<>();
-  public static Map<String, Integer> weather = new HashMap<>();
-
-  static {
-    teleport.put("waitTime", 3);
-    teleport.put("cdTime", 5);
-    teleport.put("timeout", 60);
-
-    home.put("savePath", "./plugins/SimpleCommandSet/data/");
-
-    weather.put("switchSecond", 600);
-  }
+  public static final Map<String, Integer> teleport = Map.of("waitTime", 3, "cdTime", 5, "timeout", 60);
+  public static final Map<String, Object> home = Map.of("savePath", "./plugins/SimpleCommandSet/data/");
+  public static final Map<String, Integer> weather = Map.of("switchSecond", 600);
+  public static final String ConsoleName = "SimpleCommandSet";
 
   public static void loadConfig() {
     BufferedWriter bw;

@@ -80,7 +80,7 @@ public class Core extends JavaPlugin {
     getCommand("weatherunlock").setExecutor(new WeatherCommand(this));
 
     // world
-    getCommand("world").setExecutor(new WorldCommand());
+    getCommand("world").setExecutor(new WorldCommand(this));
   }
 
   private void loadTabCompleter() {
@@ -98,6 +98,8 @@ public class Core extends JavaPlugin {
 
     getCommand("weatherlock").setTabCompleter(new WorldCompleter());
     getCommand("weatherunlock").setTabCompleter(new WorldCompleter());
+
+    getCommand("world").setTabCompleter(new WorldCompleter());
   }
 
   private void loadListener() {

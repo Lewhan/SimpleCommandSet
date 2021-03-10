@@ -10,8 +10,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.yingye.scs.core.Config;
 
+import java.util.logging.Logger;
+
 @SuppressWarnings("all")
 public class BackCommand implements CommandExecutor {
+
+  private Logger logger = Logger.getLogger(Config.ConsoleName);
 
   public BackCommand() {
   }
@@ -20,7 +24,7 @@ public class BackCommand implements CommandExecutor {
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
     // 判断是不是从控制台输入的
     if (!(sender instanceof Player)) {
-      sender.sendMessage("[SimpleCommandSet]" + ChatColor.RED + " 该命令只能由玩家使用");
+      logger.info(ChatColor.RED + " 该命令只能由玩家使用");
     } else {
       Player player = (Player) sender;
       YamlConfiguration config = Config.getHomeConfig(player.getDisplayName());
