@@ -53,6 +53,9 @@ commands:
   weatherunlock:
     permission: scs.world.weather.weatherunlock
 
+  world:
+    permission: scs.world.world
+
 permissions:
   # 权限集
   scs.tpa.*:
@@ -75,6 +78,7 @@ permissions:
       wtr: true
   scs.world.*:
     children:
+      world: true
       weather.*: true
 
   scs.world.weather.*:
@@ -124,6 +128,8 @@ permissions:
     default: op
 
   # world
+  scs.world.world:
+    default: op
   scs.world.weather.weatherlock:
     default: op
   scs.world.weather.weatherunlock:

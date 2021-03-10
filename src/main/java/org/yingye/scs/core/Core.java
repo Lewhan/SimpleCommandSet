@@ -75,9 +75,12 @@ public class Core extends JavaPlugin {
     getCommand("cl").setExecutor(new DebugCommand());
     getCommand("wtr").setExecutor(new DebugCommand());
 
-    // world
+    // weather
     getCommand("weatherlock").setExecutor(new WeatherCommand(this));
     getCommand("weatherunlock").setExecutor(new WeatherCommand(this));
+
+    // world
+    getCommand("world").setExecutor(new WorldCommand());
   }
 
   private void loadTabCompleter() {
