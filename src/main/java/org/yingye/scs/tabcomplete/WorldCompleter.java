@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class WorldCompleter implements TabCompleter {
     } else if (args.length == 2) {
       if (cmd.equals("weatherlock")) {
         String[] arr = {"clear", "rain", "thunder"};
-        list = List.of(arr);
+        list = Arrays.asList(arr);
       }
     } else {
       list = new ArrayList<>();
@@ -41,7 +42,7 @@ public class WorldCompleter implements TabCompleter {
     List<String> list;
     if (args.length == 1) {
       String[] arr = {"create", "delete", "tp"};
-      list = List.of(arr);
+      list = Arrays.asList(arr);
     } else if (args.length == 2) {
       if (args[0].equals("delete") || args[0].equals("tp")) {
         list = sender.getServer().getWorlds().stream().map(World::getName).collect(Collectors.toList());
@@ -51,10 +52,10 @@ public class WorldCompleter implements TabCompleter {
     } else if (args.length == 3) {
       if (args[0].equals("create")) {
         String[] arr = {"normal", "nether", "end"};
-        list = List.of(arr);
+        list = Arrays.asList(arr);
       } else if (args[0].equals("delete")) {
         String[] arr = {"true", "false"};
-        list = List.of(arr);
+        list = Arrays.asList(arr);
       } else {
         list = new ArrayList<>();
       }

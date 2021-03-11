@@ -154,7 +154,7 @@ public class WeatherCommand implements CommandExecutor {
 
   private void monitor(World world) {
     world.setWeatherDuration(20);
-    int tick = Config.weather.get("switchSecond") * 20;
+    int tick = Config.WEATHER.get("switchSecond") * 20;
     BukkitRunnable runnable = new BukkitRunnable() {
       @Override
       public void run() {

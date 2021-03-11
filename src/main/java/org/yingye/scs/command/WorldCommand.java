@@ -11,6 +11,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("all")
@@ -18,11 +19,16 @@ public class WorldCommand implements CommandExecutor {
 
   private Plugin plugin;
 
-  private static final Map<String, World.Environment> WORLD_TYPE =
-      Map.of("normal", World.Environment.NORMAL, "nether", World.Environment.NETHER, "end", World.Environment.THE_END);
+  private static final Map<String, World.Environment> WORLD_TYPE = new HashMap<>();
 
   public WorldCommand(Plugin plugin) {
     this.plugin = plugin;
+  }
+
+  static {
+    WORLD_TYPE.put("normal", World.Environment.NORMAL);
+    WORLD_TYPE.put("nether", World.Environment.NETHER);
+    WORLD_TYPE.put("end", World.Environment.THE_END);
   }
 
   @Override

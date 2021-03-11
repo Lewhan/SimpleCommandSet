@@ -9,16 +9,27 @@ import org.yaml.snakeyaml.Yaml;
 import org.yingye.scs.util.SimpleUtil;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("all")
 public class Config {
 
-  public static final Map<String, Integer> teleport = Map.of("waitTime", 3, "cdTime", 5, "timeout", 60);
-  public static final Map<String, Object> home = Map.of("savePath", "./plugins/SimpleCommandSet/data/");
-  public static final Map<String, Integer> weather = Map.of("switchSecond", 600);
+  public static final Map<String, Integer> TELEPORT = new HashMap<>();
+  public static final Map<String, Object> HOME = new HashMap<>();
+  public static final Map<String, Integer> WEATHER = new HashMap<>();
   public static final String ConsoleName = "SimpleCommandSet";
+
+  static {
+    TELEPORT.put("waitTime", 3);
+    TELEPORT.put("cdTime", 5);
+    TELEPORT.put("timeout", 60);
+
+    HOME.put("savePath", "./plugins/SimpleCommandSet/data/");
+
+    WEATHER.put("switchSecond", 600);
+  }
 
   public static void loadConfig() {
     BufferedWriter bw;
@@ -53,16 +64,16 @@ public class Config {
   private static void loadTeleportConfig(YamlConfiguration configuration, BufferedWriter bw) throws IOException {
     try {
       ConfigurationSection configurationSection = configuration.getConfigurationSection("teleport");
-      Set<String> keys = teleport.keySet();
+      Set<String> keys = TELEPORT.keySet();
       for (String key : keys) {
         try {
           if (!configurationSection.contains(key)) {
             throw new Exception();
           }
-          teleport.put(key, configurationSection.getInt(key));
-          write("teleport 的 " + key + " 设置为: " + teleport.get(key), bw);
+          TELEPORT.put(key, configurationSection.getInt(key));
+          write("teleport 的 " + key + " 设置为: " + TELEPORT.get(key), bw);
         } catch (Exception e) {
-          write("teleport 的 " + key + " 配置获取失败, 该项使用默认配置: " + teleport.get(key), bw);
+          write("teleport 的 " + key + " 配置获取失败, 该项使用默认配置: " + TELEPORT.get(key), bw);
         }
       }
       bw.newLine();
@@ -74,16 +85,16 @@ public class Config {
   private static void loadHomeConfig(YamlConfiguration configuration, BufferedWriter bw) throws IOException {
     try {
       ConfigurationSection configurationSection = configuration.getConfigurationSection("home");
-      Set<String> keys = home.keySet();
+      Set<String> keys = HOME.keySet();
       for (String key : keys) {
         try {
           if (!configurationSection.contains(key)) {
             throw new Exception();
           }
-          home.put(key, configurationSection.get(key));
-          write("home 的 " + key + " 设置为: " + home.get(key), bw);
+          HOME.put(key, configurationSection.get(key));
+          write("home 的 " + key + " 设置为: " + HOME.get(key), bw);
         } catch (Exception e) {
-          write("home 的 " + key + " 配置获取失败, 该项使用默认配置: " + home.get(key), bw);
+          write("home 的 " + key + " 配置获取失败, 该项使用默认配置: " + HOME.get(key), bw);
         }
       }
       bw.newLine();
@@ -95,16 +106,16 @@ public class Config {
   private static void loadWeatherConfig(YamlConfiguration configuration, BufferedWriter bw) throws IOException {
     try {
       ConfigurationSection configurationSection = configuration.getConfigurationSection("weather");
-      Set<String> keys = weather.keySet();
+      Set<String> keys = WEATHER.keySet();
       for (String key : keys) {
         try {
           if (!configurationSection.contains(key)) {
             throw new Exception();
           }
-          weather.put(key, configurationSection.getInt(key));
-          write("weather 的 " + key + " 设置为: " + weather.get(key), bw);
+          WEATHER.put(key, configurationSection.getInt(key));
+          write("weather 的 " + key + " 设置为: " + WEATHER.get(key), bw);
         } catch (Exception e) {
-          write("weather 的 " + key + " 配置获取失败, 该项使用默认配置: " + weather.get(key), bw);
+          write("weather 的 " + key + " 配置获取失败, 该项使用默认配置: " + WEATHER.get(key), bw);
         }
       }
       bw.newLine();
@@ -120,17 +131,17 @@ public class Config {
   }
 
   public static YamlConfiguration getHomeConfig(Player player) {
-    File dir = new File(home.get("savePath").toString());
+    File dir = new File(HOME.get("savePath").toString());
     if (!dir.exists()) {
       dir.mkdirs();
     }
-    File homeFile = new File(home.get("savePath").toString() + player.getDisplayName() + ".yml");
+    File homeFile = new File(HOME.get("savePath").toString() + player.getDisplayName() + ".yml");
     return checkConfigAvailability(homeFile, player);
   }
 
   public static void saveHomeConfig(YamlConfiguration config, Player player) {
     try {
-      config.save(new File(home.get("savePath").toString() + player.getDisplayName() + ".yml"));
+      config.save(new File(HOME.get("savePath").toString() + player.getDisplayName() + ".yml"));
     } catch (Exception e) {
       player.sendMessage(ChatColor.RED + "返回点设置失败");
       e.printStackTrace();
