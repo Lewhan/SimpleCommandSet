@@ -9,6 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.slf4j.Logger;
+import org.yingye.scs.core.Core;
+import org.yingye.scs.util.SimpleUtil;
 
 import java.io.File;
 import java.util.Map;
@@ -17,9 +20,11 @@ import java.util.Map;
 public class WorldCommand implements CommandExecutor {
 
   private Plugin plugin;
+  private Logger log = Core.log;
 
   private static final Map<String, World.Environment> WORLD_TYPE =
       Map.of("normal", World.Environment.NORMAL, "nether", World.Environment.NETHER, "end", World.Environment.THE_END);
+  private static final Map<String, String> WORLD_TYPE_NAME = Map.of("normal", "正常", "nether", "下界", "end", "末地");
 
   public WorldCommand(Plugin plugin) {
     this.plugin = plugin;
@@ -86,6 +91,7 @@ public class WorldCommand implements CommandExecutor {
       creator.environment(environment);
     }
     sender.getServer().createWorld(creator);
+    log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",创建了世界: " + worldName + ",世界类型为: " + WORLD_TYPE_NAME.get(type));
   }
 
   private void deleteWorld(CommandSender sender, String[] args) {
@@ -126,6 +132,7 @@ public class WorldCommand implements CommandExecutor {
       File file = world.getWorldFolder();
       removeDir(file);
     }
+    log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",删除了世界: " + worldName);
   }
 
   /**

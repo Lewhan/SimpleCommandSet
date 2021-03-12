@@ -8,6 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.yingye.scs.command.DebugCommand;
 
 import java.util.HashMap;
@@ -16,13 +18,24 @@ public class DebugCommandListener implements Listener {
 
   private static final HashMap<Player, Location> locations = new HashMap<>();
 
+  private final Plugin plugin;
+
+  public DebugCommandListener(Plugin plugin) {
+    this.plugin = plugin;
+  }
+
   @EventHandler
   public void oneHitKillListener(EntityDamageByEntityEvent event) {
     Entity source = event.getDamager();
     if (source instanceof Player) {
-      Player player = (Player) source;
       if (DebugCommand.HERCLUES.contains(source)) {
-        ((Damageable) event.getEntity()).setHealth(0);
+        // 让伤害计算完了再清空血量，不然不会掉落经验值
+        new BukkitRunnable() {
+          @Override
+          public void run() {
+            ((Damageable) event.getEntity()).setHealth(0);
+          }
+        }.runTaskLater(plugin, 0);
       }
     }
   }

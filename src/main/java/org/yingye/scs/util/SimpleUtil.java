@@ -7,10 +7,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SimpleUtil {
+
+  private static final String format = "yyyy-MM-dd HH:mm:ss";
 
   public static Boolean users(CommandSender sender, String[] args) {
     Boolean flag;
@@ -51,6 +55,19 @@ public class SimpleUtil {
     map.put("pitch", configuration.getString("pitch"));
     map.put("yaw", configuration.getString("yaw"));
     return createLocation(server, map);
+  }
+
+  public static String getFormatDate() {
+    return getFormatDate(new Date(), format);
+  }
+
+  public static String getFormatDate(Date date) {
+    return getFormatDate(date, format);
+  }
+
+  public static String getFormatDate(Date date, String format) {
+    SimpleDateFormat sdf = new SimpleDateFormat(format);
+    return sdf.format(date);
   }
 
 }

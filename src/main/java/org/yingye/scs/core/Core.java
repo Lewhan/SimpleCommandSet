@@ -15,36 +15,39 @@ import java.io.File;
 @SuppressWarnings("all")
 public class Core extends JavaPlugin {
 
-  private Logger log = getSLF4JLogger();
+  public static Logger log;
 
   @Override
   public void onEnable() {
+    log = getSLF4JLogger();
     if (new File("./plugins/SimpleCommandSet/config.yml").exists() == false) {
       saveDefaultConfig();
     }
     try {
-      log.info(ChatColor.GREEN + " 配置加载中...");
+      log.info(ChatColor.GREEN + "配置加载中...");
+      Config.ConsoleName = log.getName();
+
       Config.loadConfig();
 
-      log.info(ChatColor.GREEN + " 命令加载中...");
+      log.info(ChatColor.GREEN + "命令加载中...");
       loadCommand();
 
-      log.info(ChatColor.GREEN + " 命令提示加载中...");
+      log.info(ChatColor.GREEN + "命令提示加载中...");
       loadTabCompleter();
 
-      log.info(ChatColor.GREEN + " 监听器加载中...");
+      log.info(ChatColor.GREEN + "监听器加载中...");
       loadListener();
 
-      log.info(ChatColor.GREEN + " 加载完毕");
+      log.info(ChatColor.GREEN + "加载完毕");
     } catch (Exception e) {
-      log.error(ChatColor.RED + " 初始化过程中出现异常，停用本插件", e);
+      log.error(ChatColor.RED + "初始化过程中出现异常，停用本插件", e);
       getServer().getPluginManager().disablePlugin(this);
     }
   }
 
   @Override
   public void onDisable() {
-    log.info(ChatColor.GREEN + "[SimpleCommandSet] 插件卸载");
+    log.info(ChatColor.GREEN + "插件卸载");
   }
 
   private void loadCommand() {
@@ -89,7 +92,7 @@ public class Core extends JavaPlugin {
 
     getCommand("fly").setTabCompleter(new FlyTabCompleter());
 
-    // 不应该有选项提示
+    // 不应该有选项提示，随便注册一个提示器
     getCommand("back").setTabCompleter(new HomeTabCompleter());
 
     getCommand("home").setTabCompleter(new HomeTabCompleter());
@@ -108,7 +111,7 @@ public class Core extends JavaPlugin {
     getServer().getPluginManager().registerEvents(new GodListener(), this);
     getServer().getPluginManager().registerEvents(new CommandListener(), this);
 
-    getServer().getPluginManager().registerEvents(new DebugCommandListener(), this);
+    getServer().getPluginManager().registerEvents(new DebugCommandListener(this), this);
   }
 
 }

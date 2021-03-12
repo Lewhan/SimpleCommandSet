@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
+import org.slf4j.Logger;
+import org.yingye.scs.core.Core;
 import org.yingye.scs.util.SimpleUtil;
 
 import java.util.HashSet;
@@ -19,6 +21,7 @@ public class GodCommand implements CommandExecutor {
 
   @Getter
   private static final HashSet<Player> players = new HashSet<>();
+  private Logger log = Core.log;
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -80,6 +83,7 @@ public class GodCommand implements CommandExecutor {
     players.add(player);
     sender.sendMessage(ChatColor.GREEN + "已开启玩家（" + player.getDisplayName() + ")的无敌模式");
     player.sendMessage(ChatColor.GREEN + "已由管理员开启你的无敌模式");
+    log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getDisplayName() + "的无敌模式");
   }
 
   private void change(CommandSender sender, Player player) {

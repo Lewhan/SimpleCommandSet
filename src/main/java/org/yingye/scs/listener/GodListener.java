@@ -52,8 +52,4 @@ public class GodListener implements Listener {
     }
   }
 
-//  private LivingEntity findPlayerOrVillager() {
-//
-//  }
-
 }

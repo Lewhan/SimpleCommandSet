@@ -8,8 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.slf4j.Logger;
 import org.yingye.scs.core.Config;
+import org.yingye.scs.core.Core;
 import org.yingye.scs.status.Weather;
+import org.yingye.scs.util.SimpleUtil;
 
 import java.util.HashMap;
 
@@ -26,6 +29,7 @@ public class WeatherCommand implements CommandExecutor {
 
 
   private final Plugin plugin;
+  private Logger log = Core.log;
 
   public WeatherCommand(Plugin plugin) {
     this.plugin = plugin;
@@ -125,6 +129,7 @@ public class WeatherCommand implements CommandExecutor {
     }
     monitor(world);
     sender.sendMessage(ChatColor.GREEN + "已将世界(" + ChatColor.AQUA + world.getName() + ChatColor.GREEN + ")的天气设为: " + WEATHER_TYPE.get(weather));
+    log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",将世界: " + world.getName() + "的天气锁定为: " + WEATHER_TYPE.get(weather));
   }
 
   private void weatherUnlock(CommandSender sender, String worldName) {
@@ -150,11 +155,12 @@ public class WeatherCommand implements CommandExecutor {
       runnable.cancel();
     }
     sender.sendMessage(ChatColor.GREEN + "已解除世界(" + ChatColor.AQUA + world.getName() + ChatColor.GREEN + ")的天气锁定");
+    log.info(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",解除了世界: " + world.getName() + "的天气锁定");
   }
 
   private void monitor(World world) {
     world.setWeatherDuration(20);
-    int tick = Config.weather.get("switchSecond") * 20;
+    int tick = Config.WEATHER.get("switchSecond") * 20;
     BukkitRunnable runnable = new BukkitRunnable() {
       @Override
       public void run() {

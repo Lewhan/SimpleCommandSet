@@ -5,6 +5,7 @@ import org.bukkit.Server;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.slf4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 import org.yingye.scs.util.SimpleUtil;
 
@@ -15,28 +16,31 @@ import java.util.Set;
 @SuppressWarnings("all")
 public class Config {
 
-  public static final Map<String, Integer> teleport = Map.of("waitTime", 3, "cdTime", 5, "timeout", 60);
-  public static final Map<String, Object> home = Map.of("savePath", "./plugins/SimpleCommandSet/data/");
-  public static final Map<String, Integer> weather = Map.of("switchSecond", 600);
-  public static final String ConsoleName = "SimpleCommandSet";
+  public static final Map<String, Integer> TELEPORT = Map.of("waitTime", 3, "cdTime", 5, "timeout", 60);
+  public static final Map<String, Object> HOME = Map.of("savePath", "./plugins/SimpleCommandSet/data/");
+  public static final Map<String, Integer> WEATHER = Map.of("switchSecond", 600);
+  public static String ConsoleName = "SimpleCommandSet";
+  public static Logger log = Core.log;
+  private static boolean flag = false;
 
   public static void loadConfig() {
     BufferedWriter bw;
+    File outLog = new File("plugins/SimpleCommandSet/info.log");
     try {
-      bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./plugins/SimpleCommandSet/info.log")));
+      bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outLog)));
     } catch (Exception e) {
-      System.out.println("[SimpleCommandSet] " + ChatColor.RED + "输出流创建失败，停止加载配置");
+      log.error("输出流创建失败，停止加载并使用默认配置", e);
       return;
     }
 
     File file;
     try {
-      file = new File("./plugins/SimpleCommandSet/config.yml");
+      file = new File("plugins/SimpleCommandSet/config.yml");
       if (file == null) {
         throw new Exception();
       }
     } catch (Exception e) {
-      System.out.println("[SimpleCommandSet] " + ChatColor.RED + "没有找到配置文件, 使用默认配置");
+      log.warn("没有找到配置文件, 使用默认配置");
       return;
     }
     YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
@@ -45,24 +49,26 @@ public class Config {
       loadHomeConfig(configuration, bw);
       loadWeatherConfig(configuration, bw);
       bw.close();
+      log.info(ChatColor.GREEN + "配置文件加载完毕，日志路径: " + outLog.getAbsolutePath());
     } catch (IOException e) {
       e.printStackTrace();
+      log.warn("配置文件加载失败，日志路径: " + outLog.getAbsolutePath());
     }
   }
 
   private static void loadTeleportConfig(YamlConfiguration configuration, BufferedWriter bw) throws IOException {
     try {
       ConfigurationSection configurationSection = configuration.getConfigurationSection("teleport");
-      Set<String> keys = teleport.keySet();
+      Set<String> keys = TELEPORT.keySet();
       for (String key : keys) {
         try {
           if (!configurationSection.contains(key)) {
             throw new Exception();
           }
-          teleport.put(key, configurationSection.getInt(key));
-          write("teleport 的 " + key + " 设置为: " + teleport.get(key), bw);
+          TELEPORT.put(key, configurationSection.getInt(key));
+          write("teleport 的 " + key + " 设置为: " + TELEPORT.get(key), bw);
         } catch (Exception e) {
-          write("teleport 的 " + key + " 配置获取失败, 该项使用默认配置: " + teleport.get(key), bw);
+          write("teleport 的 " + key + " 配置获取失败, 该项使用默认配置: " + TELEPORT.get(key), bw);
         }
       }
       bw.newLine();
@@ -74,16 +80,16 @@ public class Config {
   private static void loadHomeConfig(YamlConfiguration configuration, BufferedWriter bw) throws IOException {
     try {
       ConfigurationSection configurationSection = configuration.getConfigurationSection("home");
-      Set<String> keys = home.keySet();
+      Set<String> keys = HOME.keySet();
       for (String key : keys) {
         try {
           if (!configurationSection.contains(key)) {
             throw new Exception();
           }
-          home.put(key, configurationSection.get(key));
-          write("home 的 " + key + " 设置为: " + home.get(key), bw);
+          HOME.put(key, configurationSection.get(key));
+          write("home 的 " + key + " 设置为: " + HOME.get(key), bw);
         } catch (Exception e) {
-          write("home 的 " + key + " 配置获取失败, 该项使用默认配置: " + home.get(key), bw);
+          write("home 的 " + key + " 配置获取失败, 该项使用默认配置: " + HOME.get(key), bw);
         }
       }
       bw.newLine();
@@ -95,16 +101,16 @@ public class Config {
   private static void loadWeatherConfig(YamlConfiguration configuration, BufferedWriter bw) throws IOException {
     try {
       ConfigurationSection configurationSection = configuration.getConfigurationSection("weather");
-      Set<String> keys = weather.keySet();
+      Set<String> keys = WEATHER.keySet();
       for (String key : keys) {
         try {
           if (!configurationSection.contains(key)) {
             throw new Exception();
           }
-          weather.put(key, configurationSection.getInt(key));
-          write("weather 的 " + key + " 设置为: " + weather.get(key), bw);
+          WEATHER.put(key, configurationSection.getInt(key));
+          write("weather 的 " + key + " 设置为: " + WEATHER.get(key), bw);
         } catch (Exception e) {
-          write("weather 的 " + key + " 配置获取失败, 该项使用默认配置: " + weather.get(key), bw);
+          write("weather 的 " + key + " 配置获取失败, 该项使用默认配置: " + WEATHER.get(key), bw);
         }
       }
       bw.newLine();
@@ -120,17 +126,17 @@ public class Config {
   }
 
   public static YamlConfiguration getHomeConfig(Player player) {
-    File dir = new File(home.get("savePath").toString());
+    File dir = new File(HOME.get("savePath").toString());
     if (!dir.exists()) {
       dir.mkdirs();
     }
-    File homeFile = new File(home.get("savePath").toString() + player.getDisplayName() + ".yml");
+    File homeFile = new File(HOME.get("savePath").toString() + player.getDisplayName() + ".yml");
     return checkConfigAvailability(homeFile, player);
   }
 
   public static void saveHomeConfig(YamlConfiguration config, Player player) {
     try {
-      config.save(new File(home.get("savePath").toString() + player.getDisplayName() + ".yml"));
+      config.save(new File(HOME.get("savePath").toString() + player.getDisplayName() + ".yml"));
     } catch (Exception e) {
       player.sendMessage(ChatColor.RED + "返回点设置失败");
       e.printStackTrace();
@@ -157,10 +163,11 @@ public class Config {
   private static YamlConfiguration checkConfigAvailability(File file, Player player) {
     Yaml yaml = new Yaml();
     try {
+      // 因为读取出的Map的泛型不确定，所以会报unchecked的警告
       Map<String, Map<String, Map>> map = yaml.loadAs(new FileInputStream(file), Map.class);
       if (map != null) {
         Server server = player.getServer();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         if (map.containsKey("home")) {
           Map<String, Map> homeMap = map.get("home");
