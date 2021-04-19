@@ -10,6 +10,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yingye.scs.util.SimpleUtil;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,6 +54,11 @@ public class Config {
     } catch (IOException e) {
       e.printStackTrace();
       log.warn("配置文件加载失败，日志路径: " + outLog.getAbsolutePath());
+      try {
+        bw.close();
+      } catch (IOException ioException) {
+        ioException.printStackTrace();
+      }
     }
   }
 
@@ -73,7 +79,7 @@ public class Config {
       }
       bw.newLine();
     } catch (Exception e) {
-      write("teleport配置获取失败", bw);
+      write("teleport配置获取失败，使用默认配置", bw);
     }
   }
 
@@ -94,7 +100,7 @@ public class Config {
       }
       bw.newLine();
     } catch (Exception e) {
-      write("home配置获取失败", bw);
+      write("home配置获取失败，使用默认配置", bw);
     }
   }
 
@@ -115,7 +121,7 @@ public class Config {
       }
       bw.newLine();
     } catch (Exception e) {
-      write("weather配置获取失败", bw);
+      write("weather配置获取失败，使用默认配置", bw);
     }
   }
 
@@ -130,6 +136,7 @@ public class Config {
     if (!dir.exists()) {
       dir.mkdirs();
     }
+    // 文件可能不存在
     File homeFile = new File(HOME.get("savePath").toString() + player.getDisplayName() + ".yml");
     return checkConfigAvailability(homeFile, player);
   }
@@ -161,11 +168,19 @@ public class Config {
   }
 
   private static YamlConfiguration checkConfigAvailability(File file, Player player) {
+    // 如果配置文件不存在则给出一个空的map
+    if (!file.exists()) {
+      return map2YamlConfiguration(new HashMap<>());
+    }
     Yaml yaml = new Yaml();
     try {
       // 因为读取出的Map的泛型不确定，所以会报unchecked的警告
       Map<String, Map<String, Map>> map = yaml.loadAs(new FileInputStream(file), Map.class);
-      if (map != null) {
+
+      if (map == null) {
+        // 如果配置文件是个空文件，也给出一个空的map
+        return map2YamlConfiguration(new HashMap<>());
+      } else {
         Server server = player.getServer();
         StringBuilder sb = new StringBuilder();
 
@@ -199,8 +214,6 @@ public class Config {
         YamlConfiguration parse = map2YamlConfiguration(map);
         saveHomeConfig(parse, player);
         return parse;
-      } else {
-        return null;
       }
     } catch (Exception e) {
       e.printStackTrace();

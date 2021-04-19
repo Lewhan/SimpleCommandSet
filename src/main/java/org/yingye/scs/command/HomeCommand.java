@@ -35,21 +35,10 @@ public class HomeCommand implements CommandExecutor {
       return;
     } else {
       try {
-        File dir = new File(Config.HOME.get("savePath").toString());
-        if (!dir.exists()) {
-          dir.mkdirs();
-        }
-        File homeFile = new File(Config.HOME.get("savePath").toString() + player.getDisplayName() + ".yml");
-        YamlConfiguration config = new YamlConfiguration();
-        if (homeFile.exists()) {
-          config = YamlConfiguration.loadConfiguration(homeFile);
-        }
-        if (!config.contains("home")) {
-          config.createSection("home");
-        }
+        YamlConfiguration config = Config.getHomeConfig(player);
         ConfigurationSection root = config.getConfigurationSection("home");
         root.set(args[0], player.getLocation());
-        config.save(homeFile);
+        Config.saveHomeConfig(config, player);
         player.sendMessage(ChatColor.GREEN + "家设置成功");
       } catch (Exception e) {
         player.sendMessage(ChatColor.RED + "家设置失败");

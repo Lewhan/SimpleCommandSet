@@ -19,7 +19,8 @@ public class DeadListener implements Listener {
 //    player.sendMessage(ChatColor.RED + "死亡地点" + ChatColor.WHITE + "[x: " + location.getBlockX() + " , y: " + location.getBlockY() + " , z: " + location.getBlockZ() + "]");
     try {
       YamlConfiguration config = Config.getHomeConfig(player);
-      ConfigurationSection root = config.createSection("back");
+      ConfigurationSection root = config.getConfigurationSection("back");
+      assert root != null;
       root.set("back", player.getLocation());
       Config.saveHomeConfig(config, player);
       player.sendMessage(ChatColor.GREEN + "输入 " + ChatColor.RED + "/back " + ChatColor.GREEN + "返回死亡地点");
