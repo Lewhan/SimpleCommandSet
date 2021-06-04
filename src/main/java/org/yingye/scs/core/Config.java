@@ -17,9 +17,9 @@ import java.util.Set;
 @SuppressWarnings("all")
 public class Config {
 
-  public static final Map<String, Integer> TELEPORT = Map.of("waitTime", 3, "cdTime", 5, "timeout", 60);
-  public static final Map<String, Object> HOME = Map.of("savePath", "./plugins/SimpleCommandSet/data/");
-  public static final Map<String, Integer> WEATHER = Map.of("switchSecond", 600);
+  public static final HashMap<String, Integer> TELEPORT = new HashMap<>(Map.of("waitTime", 3, "cdTime", 5, "timeout", 60));
+  public static final HashMap<String, Object> HOME = new HashMap<>(Map.of("savePath", "./plugins/SimpleCommandSet/data/"));
+  public static final HashMap<String, Integer> WEATHER = new HashMap<>(Map.of("switchSecond", 600));
   public static String ConsoleName = "SimpleCommandSet";
   public static Logger log = Core.log;
   private static boolean flag = false;
