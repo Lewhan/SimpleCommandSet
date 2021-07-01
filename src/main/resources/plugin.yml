@@ -44,8 +44,8 @@ commands:
   cl:
     permission: scs.debug.cl
 
-  wtr:
-    permission: scs.debug.wtr
+  weatherinfo:
+    permission: scs.world.weather.weatherinfo
 
   weatherlock:
     permission: scs.world.weather.weatherlock
@@ -75,13 +75,13 @@ permissions:
       ohk: true
       hb: true
       cl: true
-      wtr: true
   scs.world.*:
     children:
       world: true
       weather.*: true
 
   scs.world.weather.*:
+    weatherinfo: true
     weatherlock: true
     weatherunlock: true
 
@@ -112,8 +112,6 @@ permissions:
     default: op
   scs.debug.cl:
     default: op
-  scs.debug.wtr:
-    default: op
 
   # back
   scs.back:
@@ -134,3 +132,5 @@ permissions:
     default: op
   scs.world.weather.weatherunlock:
     default: op
+  scs.world.weather.weatherinfo:
+    default: true

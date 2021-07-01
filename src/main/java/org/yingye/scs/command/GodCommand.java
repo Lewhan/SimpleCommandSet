@@ -1,6 +1,5 @@
 package org.yingye.scs.command;
 
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,9 +18,12 @@ import java.util.List;
 @SuppressWarnings("all")
 public class GodCommand implements CommandExecutor {
 
-  @Getter
   private static final HashSet<Player> players = new HashSet<>();
   private Logger log = Core.log;
+
+  public static HashSet<Player> getPlayers() {
+    return players;
+  }
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

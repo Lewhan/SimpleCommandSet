@@ -1,7 +1,6 @@
 package org.yingye.scs.command;
 
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.command.Command;
@@ -35,8 +34,6 @@ public class DebugCommand implements CommandExecutor {
       healthBoost(sender, args);
     } else if (s.equals("cl")) {
       currentLocation((Player) sender);
-    } else if (s.equals("wtr")) {
-      weatherTimeRemaining((Player) sender);
     }
     return true;
   }
@@ -81,11 +78,6 @@ public class DebugCommand implements CommandExecutor {
       CURRENT_LOCATION.add(player);
       player.sendMessage(ChatColor.GREEN + "已为你开启坐标提示");
     }
-  }
-
-  private void weatherTimeRemaining(Player player) {
-    World world = player.getWorld();
-    player.sendMessage("当前世界的天气剩余时间为: " + (world.getWeatherDuration() / 20) + "秒");
   }
 
 }
