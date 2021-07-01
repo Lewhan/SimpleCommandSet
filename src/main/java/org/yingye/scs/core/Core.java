@@ -76,9 +76,9 @@ public class Core extends JavaPlugin {
     getCommand("ohk").setExecutor(new DebugCommand());
     getCommand("hb").setExecutor(new DebugCommand());
     getCommand("cl").setExecutor(new DebugCommand());
-    getCommand("wtr").setExecutor(new DebugCommand());
 
     // weather
+    getCommand("weatherinfo").setExecutor(new WeatherCommand(this));
     getCommand("weatherlock").setExecutor(new WeatherCommand(this));
     getCommand("weatherunlock").setExecutor(new WeatherCommand(this));
 

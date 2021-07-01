@@ -14,6 +14,7 @@ import org.yingye.scs.core.Core;
 import org.yingye.scs.util.SimpleUtil;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("all")
@@ -22,9 +23,8 @@ public class WorldCommand implements CommandExecutor {
   private Plugin plugin;
   private Logger log = Core.log;
 
-  private static final Map<String, World.Environment> WORLD_TYPE =
-      Map.of("normal", World.Environment.NORMAL, "nether", World.Environment.NETHER, "end", World.Environment.THE_END);
-  private static final Map<String, String> WORLD_TYPE_NAME = Map.of("normal", "正常", "nether", "下界", "end", "末地");
+  private static final HashMap<String, World.Environment> WORLD_TYPE = new HashMap(Map.of("normal", World.Environment.NORMAL, "nether", World.Environment.NETHER, "end", World.Environment.THE_END));
+  private static final HashMap<String, String> WORLD_TYPE_NAME = new HashMap(Map.of("normal", "正常", "nether", "下界", "end", "末地"));
 
   public WorldCommand(Plugin plugin) {
     this.plugin = plugin;

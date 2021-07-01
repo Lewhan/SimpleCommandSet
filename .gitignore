@@ -14,3 +14,7 @@ buildNumber.properties
 .vscode
 .settings
 SimpleCommandSet.iml
+
+.gradle/
+gradle/
+build/
