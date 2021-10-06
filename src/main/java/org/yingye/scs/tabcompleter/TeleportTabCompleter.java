@@ -1,4 +1,4 @@
-package org.yingye.scs.tabcomplete;
+package org.yingye.scs.tabcompleter;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

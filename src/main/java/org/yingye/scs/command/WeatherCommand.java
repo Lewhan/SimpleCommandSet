@@ -255,8 +255,11 @@ public class WeatherCommand implements CommandExecutor {
 
   private void worldWeatherInfo(CommandSender sender, String worldName) {
     World world = sender.getServer().getWorld(worldName);
-    assert world != null;
-    sender.sendMessage(worldWeatherInfo("你查看的世界为: ", world));
+    if (world != null) {
+      sender.sendMessage(worldWeatherInfo("你查看的世界为: ", world));
+    } else {
+      sender.sendMessage(ChatColor.RED + "你所查看的世界不存在");
+    }
   }
 
   private String worldWeatherInfo(String title, World world) {
