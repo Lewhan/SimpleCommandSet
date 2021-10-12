@@ -13,10 +13,7 @@ import org.yingye.scs.core.Config;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TeleportCommand implements CommandExecutor {
-
-  // 用于BukkitRunnable的定时执行
-  private final JavaPlugin plugin;
+public record TeleportCommand(JavaPlugin plugin) implements CommandExecutor {
 
   /**
    * 存放等待使用的Runnable<br>
@@ -34,10 +31,6 @@ public class TeleportCommand implements CommandExecutor {
    * 进入命令冷却状态的玩家
    */
   private static final HashSet<Player> WAIT = new HashSet<>();
-
-  public TeleportCommand(JavaPlugin plugin) {
-    this.plugin = plugin;
-  }
 
   /**
    * 命令触发器 & 方法调配中心，调用命令对应的方法

@@ -14,15 +14,9 @@ import org.yingye.scs.command.DebugCommand;
 
 import java.util.HashMap;
 
-public class DebugCommandListener implements Listener {
+public record DebugCommandListener(Plugin plugin) implements Listener {
 
   private static final HashMap<Player, Location> locations = new HashMap<>();
-
-  private final Plugin plugin;
-
-  public DebugCommandListener(Plugin plugin) {
-    this.plugin = plugin;
-  }
 
   @EventHandler
   public void oneHitKillListener(EntityDamageByEntityEvent event) {

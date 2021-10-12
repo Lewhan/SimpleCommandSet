@@ -14,8 +14,7 @@ public class GodListener implements Listener {
 
   @EventHandler
   public void onPlayerDamage(EntityDamageEvent event) {
-    if (event.getEntity() instanceof Player) {
-      Player obj = (Player) event.getEntity();
+    if (event.getEntity() instanceof Player obj) {
       HashSet<Player> players = GodCommand.getPlayers();
       for (Player player : players) {
         if (obj == player) {
