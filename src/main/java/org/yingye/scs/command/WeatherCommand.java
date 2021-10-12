@@ -159,15 +159,9 @@ public class WeatherCommand implements CommandExecutor {
   private void weatherLock(CommandSender sender, World world, String weather) {
     weatherUnlock(sender, world);
     switch (weather) {
-      case "clear":
-        LOCKED_WORLD.put(world, WeatherStatus.Clear);
-        break;
-      case "rain":
-        LOCKED_WORLD.put(world, WeatherStatus.Rain);
-        break;
-      case "thunder":
-        LOCKED_WORLD.put(world, WeatherStatus.Thunder);
-        break;
+      case "clear" -> LOCKED_WORLD.put(world, WeatherStatus.Clear);
+      case "rain" -> LOCKED_WORLD.put(world, WeatherStatus.Rain);
+      case "thunder" -> LOCKED_WORLD.put(world, WeatherStatus.Thunder);
     }
     monitor(world);
     sender.sendMessage(ChatColor.GREEN + "已将世界(" + ChatColor.AQUA + world.getName() + ChatColor.GREEN + ")的天气设为: " + WEATHER_TYPE.get(weather));
@@ -244,8 +238,7 @@ public class WeatherCommand implements CommandExecutor {
   }
 
   private void currentWeatherInfo(CommandSender sender) {
-    if (sender instanceof Player) {
-      Player player = (Player) sender;
+    if (sender instanceof Player player) {
       World world = player.getWorld();
       player.sendMessage(worldWeatherInfo("当前世界为: ", world));
     } else {
@@ -255,8 +248,11 @@ public class WeatherCommand implements CommandExecutor {
 
   private void worldWeatherInfo(CommandSender sender, String worldName) {
     World world = sender.getServer().getWorld(worldName);
-    assert world != null;
-    sender.sendMessage(worldWeatherInfo("你查看的世界为: ", world));
+    if (world != null) {
+      sender.sendMessage(worldWeatherInfo("你查看的世界为: ", world));
+    } else {
+      sender.sendMessage(ChatColor.RED + "你所查看的世界不存在");
+    }
   }
 
   private String worldWeatherInfo(String title, World world) {

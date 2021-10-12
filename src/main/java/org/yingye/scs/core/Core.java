@@ -5,10 +5,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.yingye.scs.command.*;
 import org.yingye.scs.listener.*;
-import org.yingye.scs.tabcomplete.FlyTabCompleter;
-import org.yingye.scs.tabcomplete.HomeTabCompleter;
-import org.yingye.scs.tabcomplete.TeleportTabCompleter;
-import org.yingye.scs.tabcomplete.WorldCompleter;
+import org.yingye.scs.tabcompleter.FlyTabCompleter;
+import org.yingye.scs.tabcompleter.HomeTabCompleter;
+import org.yingye.scs.tabcompleter.TeleportTabCompleter;
+import org.yingye.scs.tabcompleter.WorldCompleter;
 
 import java.io.File;
 

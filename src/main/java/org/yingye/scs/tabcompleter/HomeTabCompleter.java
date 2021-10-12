@@ -1,4 +1,4 @@
-package org.yingye.scs.tabcomplete;
+package org.yingye.scs.tabcompleter;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -21,7 +21,7 @@ public class HomeTabCompleter implements TabCompleter {
     if (sender instanceof Player && (alias.equalsIgnoreCase("home") || alias.equalsIgnoreCase("delhome"))) {
       if (args.length == 1) {
         Player player = (Player) sender;
-        File homeFile = new File(Config.HOME.get("savePath").toString() + player.getDisplayName() + ".yml");
+        File homeFile = new File(Config.HOME.get("savePath").toString() + player.getName() + ".yml");
         if (!homeFile.exists()) {
           return options;
         } else {

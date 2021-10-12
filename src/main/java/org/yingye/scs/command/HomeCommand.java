@@ -52,7 +52,7 @@ public class HomeCommand implements CommandExecutor {
       player.sendMessage(ChatColor.RED + "未输入家的名字");
       return;
     } else {
-      File homeFile = new File(Config.HOME.get("savePath").toString() + player.getDisplayName() + ".yml");
+      File homeFile = new File(Config.HOME.get("savePath").toString() + player.getName() + ".yml");
       // 判断文件存不存在
       if (!homeFile.exists()) {
         player.sendMessage(ChatColor.RED + "没有这个家");

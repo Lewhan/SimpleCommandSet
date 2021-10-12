@@ -137,13 +137,13 @@ public class Config {
       dir.mkdirs();
     }
     // 文件可能不存在
-    File homeFile = new File(HOME.get("savePath").toString() + player.getDisplayName() + ".yml");
+    File homeFile = new File(HOME.get("savePath").toString() + player.getName() + ".yml");
     return checkConfigAvailability(homeFile, player);
   }
 
   public static void saveHomeConfig(YamlConfiguration config, Player player) {
     try {
-      config.save(new File(HOME.get("savePath").toString() + player.getDisplayName() + ".yml"));
+      config.save(new File(HOME.get("savePath").toString() + player.getName() + ".yml"));
     } catch (Exception e) {
       player.sendMessage(ChatColor.RED + "返回点设置失败");
       e.printStackTrace();

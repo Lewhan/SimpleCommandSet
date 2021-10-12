@@ -67,7 +67,7 @@ public class DebugCommand implements CommandExecutor {
     attribute.setBaseValue(health);
     player.setHealth(health);
     sender.sendMessage(ChatColor.GREEN + "成功将玩家(" + ChatColor.AQUA + args[0] + ChatColor.GREEN + ")的血量上限设置为: " + health);
-    log.info(SimpleUtil.getFormatDate() + ChatColor.GREEN + " --- 管理员: " + sender.getName() + ",将玩家: " + player.getDisplayName() + "的血量上限更改为: " + health);
+    log.info(SimpleUtil.getFormatDate() + ChatColor.GREEN + " --- 管理员: " + sender.getName() + ",将玩家: " + player.getName() + "的血量上限更改为: " + health);
   }
 
   private void currentLocation(Player player) {

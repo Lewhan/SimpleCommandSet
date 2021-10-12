@@ -1,4 +1,4 @@
-package org.yingye.scs.tabcomplete;
+package org.yingye.scs.tabcompleter;
 
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -28,7 +28,7 @@ public class FlyTabCompleter implements TabCompleter {
       Server server = sender.getServer();
       ArrayList<? extends Player> players = new ArrayList<>(server.getOnlinePlayers());
       for (Player player : players) {
-        list.add(player.getDisplayName());
+        list.add(player.getName());
       }
     } else if (args.length == 2) {
       list.add("on");
