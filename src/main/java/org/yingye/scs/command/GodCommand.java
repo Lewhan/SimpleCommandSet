@@ -77,15 +77,15 @@ public class GodCommand implements CommandExecutor {
 
   private void remove(CommandSender sender, Player player) {
     players.remove(player);
-    sender.sendMessage(ChatColor.GREEN + "已关闭玩家（" + player.getDisplayName() + ")的无敌模式");
+    sender.sendMessage(ChatColor.GREEN + "已关闭玩家（" + player.getName() + ")的无敌模式");
     player.sendMessage(ChatColor.GREEN + "已由管理员关闭你的无敌模式");
   }
 
   private void add(CommandSender sender, Player player) {
     players.add(player);
-    sender.sendMessage(ChatColor.GREEN + "已开启玩家（" + player.getDisplayName() + ")的无敌模式");
+    sender.sendMessage(ChatColor.GREEN + "已开启玩家（" + player.getName() + ")的无敌模式");
     player.sendMessage(ChatColor.GREEN + "已由管理员开启你的无敌模式");
-    log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getDisplayName() + "的无敌模式");
+    log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getName() + "的无敌模式");
   }
 
   private void change(CommandSender sender, Player player) {

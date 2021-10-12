@@ -52,7 +52,7 @@ public class FlyCommand implements CommandExecutor {
           player.setAllowFlight(true);
           sender.sendMessage(ChatColor.GREEN + "已开启玩家(" + args[0] + ")的飞行模式");
           player.sendMessage(ChatColor.GREEN + "飞行模式已开启");
-          log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getDisplayName() + "的飞行模式");
+          log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getName() + "的飞行模式");
         } else if (args[1].equalsIgnoreCase("off")) {
           player.setAllowFlight(false);
           sender.sendMessage(ChatColor.GREEN + "已关闭玩家(" + args[0] + ")的飞行模式");

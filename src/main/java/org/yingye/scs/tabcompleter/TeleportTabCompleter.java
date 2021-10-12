@@ -23,8 +23,8 @@ public class TeleportTabCompleter implements TabCompleter {
     ArrayList<? extends Player> players = new ArrayList<>(sender.getServer().getOnlinePlayers());
     ArrayList<String> names = new ArrayList<>();
     for (Player value : players) {
-      if (!player.getDisplayName().equals(value.getDisplayName())) {
-        names.add(value.getDisplayName());
+      if (!player.getName().equals(value.getName())) {
+        names.add(value.getName());
       }
     }
     return names;

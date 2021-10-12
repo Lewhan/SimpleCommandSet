@@ -16,14 +16,12 @@ repositories {
     maven {
         url = uri('https://repo.maven.apache.org/maven2/')
     }
+    mavenCentral()
 }
 
 dependencies {
     // API
-    compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
-
-    // 日志
-    implementation 'org.slf4j:slf4j-api:1.7.31'
+    compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
 }
 
 group = 'org.yingye'
