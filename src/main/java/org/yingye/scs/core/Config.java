@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@SuppressWarnings("all")
 public class Config {
 
   public static final HashMap<String, Integer> TELEPORT = new HashMap<>(Map.of("waitTime", 3, "cdTime", 5, "timeout", 60));
@@ -22,7 +21,6 @@ public class Config {
   public static final HashMap<String, Integer> WEATHER = new HashMap<>(Map.of("switchSecond", 600));
   public static String ConsoleName = "SimpleCommandSet";
   public static Logger log = Core.log;
-  private static boolean flag = false;
 
   public static void loadConfig() {
     BufferedWriter bw;
@@ -37,9 +35,6 @@ public class Config {
     File file;
     try {
       file = new File("plugins/SimpleCommandSet/config.yml");
-      if (file == null) {
-        throw new Exception();
-      }
     } catch (Exception e) {
       log.warn("没有找到配置文件, 使用默认配置");
       return;
@@ -65,17 +60,15 @@ public class Config {
   private static void loadTeleportConfig(YamlConfiguration configuration, BufferedWriter bw) throws IOException {
     try {
       ConfigurationSection configurationSection = configuration.getConfigurationSection("teleport");
+      assert configurationSection != null;
       Set<String> keys = TELEPORT.keySet();
       for (String key : keys) {
-        try {
-          if (!configurationSection.contains(key)) {
-            throw new Exception();
-          }
-          TELEPORT.put(key, configurationSection.getInt(key));
-          write("teleport 的 " + key + " 设置为: " + TELEPORT.get(key), bw);
-        } catch (Exception e) {
+        if (!configurationSection.contains(key)) {
           write("teleport 的 " + key + " 配置获取失败, 该项使用默认配置: " + TELEPORT.get(key), bw);
+          continue;
         }
+        TELEPORT.put(key, configurationSection.getInt(key));
+        write("teleport 的 " + key + " 设置为: " + TELEPORT.get(key), bw);
       }
       bw.newLine();
     } catch (Exception e) {
@@ -86,17 +79,15 @@ public class Config {
   private static void loadHomeConfig(YamlConfiguration configuration, BufferedWriter bw) throws IOException {
     try {
       ConfigurationSection configurationSection = configuration.getConfigurationSection("home");
+      assert configurationSection != null;
       Set<String> keys = HOME.keySet();
       for (String key : keys) {
-        try {
-          if (!configurationSection.contains(key)) {
-            throw new Exception();
-          }
-          HOME.put(key, configurationSection.get(key));
-          write("home 的 " + key + " 设置为: " + HOME.get(key), bw);
-        } catch (Exception e) {
+        if (!configurationSection.contains(key)) {
           write("home 的 " + key + " 配置获取失败, 该项使用默认配置: " + HOME.get(key), bw);
+          continue;
         }
+        HOME.put(key, configurationSection.get(key));
+        write("home 的 " + key + " 设置为: " + HOME.get(key), bw);
       }
       bw.newLine();
     } catch (Exception e) {
@@ -107,17 +98,15 @@ public class Config {
   private static void loadWeatherConfig(YamlConfiguration configuration, BufferedWriter bw) throws IOException {
     try {
       ConfigurationSection configurationSection = configuration.getConfigurationSection("weather");
+      assert configurationSection != null;
       Set<String> keys = WEATHER.keySet();
       for (String key : keys) {
-        try {
-          if (!configurationSection.contains(key)) {
-            throw new Exception();
-          }
-          WEATHER.put(key, configurationSection.getInt(key));
-          write("weather 的 " + key + " 设置为: " + WEATHER.get(key), bw);
-        } catch (Exception e) {
+        if (!configurationSection.contains(key)) {
           write("weather 的 " + key + " 配置获取失败, 该项使用默认配置: " + WEATHER.get(key), bw);
+          continue;
         }
+        WEATHER.put(key, configurationSection.getInt(key));
+        write("weather 的 " + key + " 设置为: " + WEATHER.get(key), bw);
       }
       bw.newLine();
     } catch (Exception e) {
@@ -131,6 +120,7 @@ public class Config {
     bw.newLine();
   }
 
+  @SuppressWarnings("all")
   public static YamlConfiguration getHomeConfig(Player player) {
     File dir = new File(HOME.get("savePath").toString());
     if (!dir.exists()) {
@@ -150,6 +140,7 @@ public class Config {
     }
   }
 
+  @SuppressWarnings("all")
   private static YamlConfiguration map2YamlConfiguration(Map<String, Map<String, Map>> source) {
     YamlConfiguration configuration = new YamlConfiguration();
     if (source.get("home") == null) {
@@ -167,6 +158,7 @@ public class Config {
     return configuration;
   }
 
+  @SuppressWarnings("all")
   private static YamlConfiguration checkConfigAvailability(File file, Player player) {
     // 如果配置文件不存在则给出一个空的map
     if (!file.exists()) {

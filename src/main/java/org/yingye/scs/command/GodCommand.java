@@ -30,7 +30,7 @@ public class GodCommand implements CommandExecutor {
     Boolean flag = null;
     flag = SimpleUtil.users(sender, args);
     if (flag == null) {
-      sender.sendMessage("[SimpleCommandSet]" + ChatColor.RED + " 该命令只能由玩家使用");
+      log.error("该命令只能由玩家使用");
       return true;
     } else if (flag) {
       op(sender, args);

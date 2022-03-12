@@ -20,28 +20,29 @@ public class BackCommand implements CommandExecutor {
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
     // 判断是不是从控制台输入的
-    if (!(sender instanceof Player)) {
-      sender.sendMessage(ChatColor.RED + " 该命令只能由玩家使用");
-    } else {
-      Player player = (Player) sender;
+    if (sender instanceof Player player) {
       YamlConfiguration config = Config.getHomeConfig(player);
-      if (config != null) {
-        ConfigurationSection root = config.getConfigurationSection("back");
-        if (root != null) {
-          if (root.contains("back")) {
-            Location location = SimpleUtil.createLocation(sender.getServer(), root.getConfigurationSection("back"));
-            if (location != null) {
-              player.teleport(location);
-            } else {
-              player.sendMessage(ChatColor.RED + "暂无返回点");
-            }
-          } else {
-            player.sendMessage(ChatColor.RED + "暂无返回点");
-          }
-        } else {
-          player.sendMessage(ChatColor.RED + "暂无返回点");
-        }
+      if (config == null) {
+        player.sendMessage(ChatColor.RED + "暂无返回点");
       }
+
+      ConfigurationSection root = config.getConfigurationSection("back");
+      if (root == null) {
+        player.sendMessage(ChatColor.RED + "暂无返回点");
+      }
+      
+      if (root.contains("back")) {
+        Location location = SimpleUtil.createLocation(sender.getServer(), root.getConfigurationSection("back"));
+        if (location != null) {
+          player.teleport(location);
+        } else {
+          player.sendMessage(ChatColor.RED + "返回点获取失败");
+        }
+      } else {
+        player.sendMessage(ChatColor.RED + "暂无返回点");
+      }
+    } else {
+      sender.sendMessage(ChatColor.RED + " 该命令只能由玩家使用");
     }
     return true;
   }

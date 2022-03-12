@@ -28,11 +28,11 @@ public class DebugCommand implements CommandExecutor {
       return true;
     }
 
-    if (s.equals("ohk")) {
+    if (s.equals("ohk") || s.equals("simplecommandset:ohk")) {
       oneHitKill((Player) sender);
-    } else if (s.equals("hb")) {
+    } else if (s.equals("hb") || s.equals("simplecommandset:hb")) {
       healthBoost(sender, args);
-    } else if (s.equals("cl")) {
+    } else if (s.equals("cl") || s.equals("simplecommandset:cl")) {
       currentLocation((Player) sender);
     }
     return true;

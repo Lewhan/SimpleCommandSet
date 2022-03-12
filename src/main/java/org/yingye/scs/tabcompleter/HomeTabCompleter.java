@@ -18,9 +18,8 @@ public class HomeTabCompleter implements TabCompleter {
   @Override
   public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
     ArrayList<String> options = new ArrayList<>();
-    if (sender instanceof Player && (alias.equalsIgnoreCase("home") || alias.equalsIgnoreCase("delhome"))) {
+    if (sender instanceof Player player && (alias.equalsIgnoreCase("home") || alias.equalsIgnoreCase("delhome"))) {
       if (args.length == 1) {
-        Player player = (Player) sender;
         File homeFile = new File(Config.HOME.get("savePath").toString() + player.getName() + ".yml");
         if (!homeFile.exists()) {
           return options;

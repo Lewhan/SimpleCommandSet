@@ -18,7 +18,7 @@ public class HomeCommand implements CommandExecutor {
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
     if (sender instanceof Player) {
-      if (label.equalsIgnoreCase("sethome")) {
+      if (label.equalsIgnoreCase("sethome") || label.equalsIgnoreCase("simplecommandset:sethome")) {
         setHome((Player) sender, args);
       } else {
         home((Player) sender, args, label);
@@ -70,7 +70,7 @@ public class HomeCommand implements CommandExecutor {
         return;
       }
       // 如果输入的是home，则进行home的传送，如果是delhome，则删除这个家
-      if (label.equalsIgnoreCase("home")) {
+      if (label.equalsIgnoreCase("home") || label.equalsIgnoreCase("simplecommandset:home")) {
         Location serializable = root.getLocation(args[0]);
         if (serializable == null) {
           player.sendMessage(ChatColor.RED + "无法回到这个家");

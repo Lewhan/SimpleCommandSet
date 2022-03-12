@@ -17,6 +17,8 @@ import org.yingye.scs.util.SimpleUtil;
 import java.util.HashMap;
 
 public class WeatherCommand implements CommandExecutor {
+  private static final Logger log = Core.log;
+  private static final Plugin plugin = Core.GLOBAL_PLUGIN;
   public static final HashMap<World, WeatherStatus> LOCKED_WORLD = new HashMap<>();
   public static final HashMap<String, String> WEATHER_TYPE = new HashMap<>();
   public static final HashMap<World, BukkitRunnable> MONITORS = new HashMap<>();
@@ -25,14 +27,6 @@ public class WeatherCommand implements CommandExecutor {
     WEATHER_TYPE.put("clear", "晴天");
     WEATHER_TYPE.put("rain", "雨天");
     WEATHER_TYPE.put("thunder", "雷雨");
-  }
-
-
-  private final Plugin plugin;
-  private final Logger log = Core.log;
-
-  public WeatherCommand(Plugin plugin) {
-    this.plugin = plugin;
   }
 
   /**
@@ -47,9 +41,9 @@ public class WeatherCommand implements CommandExecutor {
   @SuppressWarnings("all")
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    if (label.equals("weatherlock")) {
+    if (label.equalsIgnoreCase("weatherlock") || label.equalsIgnoreCase("simplecommandset:weatherlock")) {
       weatherLock(sender, args);
-    } else if (label.equals("weatherunlock")) {
+    } else if (label.equals("weatherunlock") || label.equalsIgnoreCase("simplecommandset:weatherunlock")) {
       if (args.length <= 0) {
         if (sender instanceof Player) {
           weatherUnlock(sender, ((Player) sender).getWorld());
@@ -57,7 +51,7 @@ public class WeatherCommand implements CommandExecutor {
       } else {
         weatherUnlock(sender, args[0]);
       }
-    } else if (label.equals("weatherinfo")) {
+    } else if (label.equals("weatherinfo") || label.equalsIgnoreCase("simplecommandset:weatherinfo")) {
       weatherInfo(sender, args);
     }
     return true;

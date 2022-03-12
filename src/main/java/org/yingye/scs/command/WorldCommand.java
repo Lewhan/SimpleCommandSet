@@ -20,20 +20,16 @@ import java.util.Map;
 @SuppressWarnings("all")
 public class WorldCommand implements CommandExecutor {
 
-  private Plugin plugin;
-  private Logger log = Core.log;
+  private static final Logger log = Core.log;
+  private static final Plugin plugin = Core.GLOBAL_PLUGIN;
 
   private static final HashMap<String, World.Environment> WORLD_TYPE = new HashMap(Map.of("normal", World.Environment.NORMAL, "nether", World.Environment.NETHER, "end", World.Environment.THE_END));
   private static final HashMap<String, String> WORLD_TYPE_NAME = new HashMap(Map.of("normal", "正常", "nether", "下界", "end", "末地"));
 
-  public WorldCommand(Plugin plugin) {
-    this.plugin = plugin;
-  }
-
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
     label = label.toLowerCase();
-    if (label.equals("world")) {
+    if (label.equalsIgnoreCase("world") || label.equalsIgnoreCase("simplecommandset:world")) {
       if (args.length > 0) {
         world(sender, label, args);
       } else {

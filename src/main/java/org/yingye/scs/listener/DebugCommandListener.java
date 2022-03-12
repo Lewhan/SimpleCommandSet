@@ -11,12 +11,15 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.yingye.scs.command.DebugCommand;
+import org.yingye.scs.core.Core;
 
 import java.util.HashMap;
 
-public record DebugCommandListener(Plugin plugin) implements Listener {
+public class DebugCommandListener implements Listener {
 
   private static final HashMap<Player, Location> locations = new HashMap<>();
+
+  private static final Plugin plugin = Core.GLOBAL_PLUGIN;
 
   @EventHandler
   public void oneHitKillListener(EntityDamageByEntityEvent event) {

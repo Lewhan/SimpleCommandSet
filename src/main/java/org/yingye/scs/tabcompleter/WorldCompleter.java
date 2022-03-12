@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,43 +24,35 @@ public class WorldCompleter implements TabCompleter {
   }
 
   private List<String> weatherComplete(CommandSender sender, String cmd, String[] args) {
-    List<String> list = null;
+    List<String> list = new ArrayList<>();;
     if (args.length == 1) {
       list = sender.getServer().getWorlds().stream().map(World::getName).collect(Collectors.toList());
     } else if (args.length == 2) {
       if (cmd.equals("weatherlock")) {
-        String[] arr = {"clear", "rain", "thunder"};
-        list = List.of(arr);
+        list = Arrays.asList("clear", "rain", "thunder");
       }
-    } else {
-      list = new ArrayList<>();
     }
     return list;
   }
 
   private List<String> worldComplete(CommandSender sender, String[] args) {
-    List<String> list;
-    if (args.length == 1) {
-      String[] arr = {"create", "delete", "tp"};
-      list = List.of(arr);
-    } else if (args.length == 2) {
-      if (args[0].equals("delete") || args[0].equals("tp")) {
-        list = sender.getServer().getWorlds().stream().map(World::getName).collect(Collectors.toList());
-      } else {
-        list = new ArrayList<>();
+    List<String> list = new ArrayList<>();
+    switch (args.length) {
+      case 1 -> {
+        list = Arrays.asList("create", "delete", "tp");
       }
-    } else if (args.length == 3) {
-      if (args[0].equals("create")) {
-        String[] arr = {"normal", "nether", "end"};
-        list = List.of(arr);
-      } else if (args[0].equals("delete")) {
-        String[] arr = {"true", "false"};
-        list = List.of(arr);
-      } else {
-        list = new ArrayList<>();
+      case 2 -> {
+        if (args[0].equals("delete") || args[0].equals("tp")) {
+          list = sender.getServer().getWorlds().stream().map(World::getName).collect(Collectors.toList());
+        }
       }
-    } else {
-      list = new ArrayList<>();
+      case 3 -> {
+        if (args[0].equals("create")) {
+          list = Arrays.asList("normal", "nether", "end");
+        } else if (args[0].equals("delete")) {
+          list = Arrays.asList("true", "false");
+        }
+      }
     }
     return list;
   }

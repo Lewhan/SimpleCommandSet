@@ -1,6 +1,8 @@
 package org.yingye.scs.core;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.yingye.scs.command.*;
@@ -17,9 +19,20 @@ public class Core extends JavaPlugin {
 
   public static Logger log;
 
+  /**
+   * 全局信息通知标识
+   */
+  public static final String PLUGIN_TAG = "SimpleCommandSet";
+
+  /**
+   * 全局插件对象
+   */
+  public static final Plugin GLOBAL_PLUGIN = Bukkit.getServer().getPluginManager().getPlugin(PLUGIN_TAG);
+
   @Override
   public void onEnable() {
     log = getSLF4JLogger();
+
     if (new File("./plugins/SimpleCommandSet/config.yml").exists() == false) {
       saveDefaultConfig();
     }
@@ -52,11 +65,11 @@ public class Core extends JavaPlugin {
 
   private void loadCommand() {
     // tpa
-    getCommand("tpa").setExecutor(new TeleportCommand(this));
-    getCommand("tpahere").setExecutor(new TeleportCommand(this));
-    getCommand("accept").setExecutor(new TeleportCommand(this));
-    getCommand("tpclear").setExecutor(new TeleportCommand(this));
-    getCommand("deaccept").setExecutor(new TeleportCommand(this));
+    getCommand("tpa").setExecutor(new TeleportCommand());
+    getCommand("tpahere").setExecutor(new TeleportCommand());
+    getCommand("accept").setExecutor(new TeleportCommand());
+    getCommand("tpclear").setExecutor(new TeleportCommand());
+    getCommand("deaccept").setExecutor(new TeleportCommand());
 
     // back
     getCommand("back").setExecutor(new BackCommand());
@@ -78,12 +91,12 @@ public class Core extends JavaPlugin {
     getCommand("cl").setExecutor(new DebugCommand());
 
     // weather
-    getCommand("weatherinfo").setExecutor(new WeatherCommand(this));
-    getCommand("weatherlock").setExecutor(new WeatherCommand(this));
-    getCommand("weatherunlock").setExecutor(new WeatherCommand(this));
+    getCommand("weatherinfo").setExecutor(new WeatherCommand());
+    getCommand("weatherlock").setExecutor(new WeatherCommand());
+    getCommand("weatherunlock").setExecutor(new WeatherCommand());
 
     // world
-    getCommand("world").setExecutor(new WorldCommand(this));
+    getCommand("world").setExecutor(new WorldCommand());
   }
 
   private void loadTabCompleter() {
@@ -111,7 +124,7 @@ public class Core extends JavaPlugin {
     getServer().getPluginManager().registerEvents(new GodListener(), this);
     getServer().getPluginManager().registerEvents(new CommandListener(), this);
 
-    getServer().getPluginManager().registerEvents(new DebugCommandListener(this), this);
+    getServer().getPluginManager().registerEvents(new DebugCommandListener(), this);
   }
 
 }

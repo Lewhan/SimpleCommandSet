@@ -8,26 +8,24 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
     maven {
-        url = uri('https://papermc.io/repo/repository/maven-public/')
+        url = uri("https://papermc.io/repo/repository/maven-public/")
     }
 
-    maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
-    }
     mavenCentral()
 }
 
 dependencies {
-    // API
-    compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
+    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 group = 'org.yingye'
 version = '0.1.4-beta1'
 description = 'SimpleCommandSet'
-java.sourceCompatibility = JavaVersion.VERSION_17
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
