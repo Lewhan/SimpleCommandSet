@@ -7,7 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.slf4j.Logger;
 import org.yingye.scs.core.Core;
 import org.yingye.scs.util.SimpleUtil;
 
@@ -19,8 +18,6 @@ public class DebugCommand implements CommandExecutor {
 
     public static final List<Player> HERCLUES = new ArrayList<>();
     public static final List<Player> CURRENT_LOCATION = new ArrayList<>();
-
-    private Logger log = Core.log;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
@@ -67,7 +64,7 @@ public class DebugCommand implements CommandExecutor {
         attribute.setBaseValue(health);
         player.setHealth(health);
         sender.sendMessage(ChatColor.GREEN + "成功将玩家(" + ChatColor.AQUA + args[0] + ChatColor.GREEN + ")的血量上限设置为: " + health);
-        log.info(SimpleUtil.getFormatDate() + ChatColor.GREEN + " --- 管理员: " + sender.getName() + ",将玩家: " + player.getName() + "的血量上限更改为: " + health);
+        Core.printWarn(SimpleUtil.getFormatDate() + ChatColor.GREEN + " --- 管理员: " + sender.getName() + ",将玩家: " + player.getName() + "的血量上限更改为: " + health);
     }
 
     private void currentLocation(Player player) {
@@ -78,6 +75,10 @@ public class DebugCommand implements CommandExecutor {
             CURRENT_LOCATION.add(player);
             player.sendMessage(ChatColor.GREEN + "已为你开启坐标提示");
         }
+    }
+
+    private void spawnDummy() {
+
     }
 
 }

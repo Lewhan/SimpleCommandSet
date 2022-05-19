@@ -5,7 +5,6 @@ import org.bukkit.Server;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.slf4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 import org.yingye.scs.util.SimpleUtil;
 
@@ -19,8 +18,6 @@ public class Config {
     public static final HashMap<String, Integer> TELEPORT = new HashMap<>(Map.of("waitTime", 3, "cdTime", 5, "timeout", 60));
     public static final HashMap<String, Object> HOME = new HashMap<>(Map.of("savePath", "./plugins/SimpleCommandSet/data/"));
     public static final HashMap<String, Integer> WEATHER = new HashMap<>(Map.of("switchSecond", 600));
-    public static String ConsoleName = "SimpleCommandSet";
-    public static Logger log = Core.log;
 
     public static void loadConfig() {
         BufferedWriter bw;
@@ -28,7 +25,7 @@ public class Config {
         try {
             bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outLog)));
         } catch (Exception e) {
-            log.error("输出流创建失败，停止加载并使用默认配置", e);
+            Core.printErr("输出流创建失败，停止加载并使用默认配置");
             return;
         }
 
@@ -36,7 +33,7 @@ public class Config {
         try {
             file = new File("plugins/SimpleCommandSet/config.yml");
         } catch (Exception e) {
-            log.warn("没有找到配置文件, 使用默认配置");
+            Core.printInfo("没有找到配置文件, 使用默认配置");
             return;
         }
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
@@ -45,10 +42,10 @@ public class Config {
             loadHomeConfig(configuration, bw);
             loadWeatherConfig(configuration, bw);
             bw.close();
-            log.info(ChatColor.GREEN + "配置文件加载完毕，日志路径: " + outLog.getAbsolutePath());
+            Core.printInfo(ChatColor.GREEN + "配置文件加载完毕，日志路径: " + outLog.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
-            log.warn("配置文件加载失败，日志路径: " + outLog.getAbsolutePath());
+            Core.printErr("配置文件加载失败，日志路径: " + outLog.getAbsolutePath());
             try {
                 bw.close();
             } catch (IOException ioException) {

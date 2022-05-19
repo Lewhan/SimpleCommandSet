@@ -6,7 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.yingye.scs.core.Config;
 import org.yingye.scs.core.Core;
@@ -31,11 +30,6 @@ public class TeleportCommand implements CommandExecutor {
      * 进入命令冷却状态的玩家
      */
     private static final HashSet<Player> WAIT = new HashSet<>();
-
-    /**
-     * 静态获取本插件的入口对象实例
-     */
-    private static final Plugin plugin = Core.GLOBAL_PLUGIN;
 
     /**
      * 命令触发器 & 方法调配中心，调用命令对应的方法
@@ -131,7 +125,7 @@ public class TeleportCommand implements CommandExecutor {
                 public void run() {
                     WAIT.remove(player);
                 }
-            }.runTaskLater(plugin, Config.TELEPORT.get("cdTime") * 20);
+            }.runTaskLater(Core.getPlugin(), Config.TELEPORT.get("cdTime") * 20);
         } else {
             targetPlayer.sendMessage(ChatColor.GREEN + "玩家(" + ChatColor.AQUA + player.getName() + ChatColor.GREEN + ")邀请你过去");
         }
@@ -155,7 +149,7 @@ public class TeleportCommand implements CommandExecutor {
         };
 
         // 设置多少秒后自动执行销毁TP用的Runnable
-        destroy.runTaskLater(plugin, Config.TELEPORT.get("timeout") * 20L);
+        destroy.runTaskLater(Core.getPlugin(), Config.TELEPORT.get("timeout") * 20L);
 
         // 将销毁用的Runnable放入DESTROY中，当接收或拒绝请求的时候，取消并删除该Runnable
         DESTROY.put(param, destroy);
@@ -260,7 +254,7 @@ public class TeleportCommand implements CommandExecutor {
         player.sendMessage(ChatColor.GREEN + "你接受了玩家(" + ChatColor.AQUA + source.getName() + ChatColor.GREEN + ")的 " + method + " 请求");
         source.sendMessage(ChatColor.GREEN + "玩家(" + ChatColor.AQUA + player.getName() + ChatColor.GREEN + ")接受了你的 " + method + " 请求,将在" + Config.TELEPORT.get("waitTime") + "秒后进行传送");
         destroy.cancel();
-        runnable.runTaskLater(plugin, Config.TELEPORT.get("waitTime") * 20L);
+        runnable.runTaskLater(Core.getPlugin(), Config.TELEPORT.get("waitTime") * 20L);
     }
 
     /**

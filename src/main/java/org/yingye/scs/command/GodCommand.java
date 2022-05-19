@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
-import org.slf4j.Logger;
 import org.yingye.scs.core.Core;
 import org.yingye.scs.util.SimpleUtil;
 
@@ -19,7 +18,6 @@ import java.util.List;
 public class GodCommand implements CommandExecutor {
 
     private static final HashSet<Player> players = new HashSet<>();
-    private Logger log = Core.log;
 
     public static HashSet<Player> getPlayers() {
         return players;
@@ -30,7 +28,7 @@ public class GodCommand implements CommandExecutor {
         Boolean flag = null;
         flag = SimpleUtil.users(sender, args);
         if (flag == null) {
-            log.error("该命令只能由玩家使用");
+            Core.printErr("该命令只能由玩家使用");
             return true;
         } else if (flag) {
             op(sender, args);
@@ -85,7 +83,7 @@ public class GodCommand implements CommandExecutor {
         players.add(player);
         sender.sendMessage(ChatColor.GREEN + "已开启玩家（" + player.getName() + ")的无敌模式");
         player.sendMessage(ChatColor.GREEN + "已由管理员开启你的无敌模式");
-        log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getName() + "的无敌模式");
+        Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getName() + "的无敌模式");
     }
 
     private void change(CommandSender sender, Player player) {

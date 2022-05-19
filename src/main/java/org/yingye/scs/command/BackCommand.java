@@ -42,7 +42,7 @@ public class BackCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "暂无返回点");
             }
         } else {
-            sender.sendMessage(ChatColor.RED + " 该命令只能由玩家使用");
+            sender.sendMessage(ChatColor.RED + "该命令只能由玩家使用");
         }
         return true;
     }

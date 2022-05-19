@@ -2,9 +2,9 @@ package org.yingye.scs.core;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.slf4j.Logger;
 import org.yingye.scs.command.*;
 import org.yingye.scs.listener.*;
 import org.yingye.scs.tabcompleter.FlyTabCompleter;
@@ -17,50 +17,45 @@ import java.io.File;
 @SuppressWarnings("all")
 public class Core extends JavaPlugin {
 
-    public static Logger log;
+    private static CommandSender sender;
 
     /**
      * 全局信息通知标识
      */
     public static final String PLUGIN_TAG = "SimpleCommandSet";
-
-    /**
-     * 全局插件对象
-     */
-    public static final Plugin GLOBAL_PLUGIN = Bukkit.getServer().getPluginManager().getPlugin(PLUGIN_TAG);
+    public static final String LOG_PREFIX = "[" + PLUGIN_TAG + "] ";
 
     @Override
     public void onEnable() {
-        log = getSLF4JLogger();
+        sender = getServer().getConsoleSender();
 
         if (new File("./plugins/SimpleCommandSet/config.yml").exists() == false) {
             saveDefaultConfig();
         }
         try {
-            log.info(ChatColor.GREEN + "配置加载中...");
-            Config.ConsoleName = log.getName();
+            printInfo(ChatColor.GREEN + "配置加载中...");
 
             Config.loadConfig();
 
-            log.info(ChatColor.GREEN + "命令加载中...");
+            printInfo(ChatColor.GREEN + "命令加载中...");
             loadCommand();
 
-            log.info(ChatColor.GREEN + "命令提示加载中...");
+            printInfo(ChatColor.GREEN + "命令提示加载中...");
             loadTabCompleter();
 
-            log.info(ChatColor.GREEN + "监听器加载中...");
+            printInfo(ChatColor.GREEN + "监听器加载中...");
             loadListener();
 
-            log.info(ChatColor.GREEN + "加载完毕");
+            printInfo(ChatColor.GREEN + "加载完毕");
         } catch (Exception e) {
-            log.error(ChatColor.RED + "初始化过程中出现异常，停用本插件", e);
+            printErr("初始化过程中出现异常，停用本插件");
             getServer().getPluginManager().disablePlugin(this);
         }
     }
 
     @Override
     public void onDisable() {
-        log.info(ChatColor.GREEN + "插件卸载");
+        printInfo(ChatColor.GREEN + "插件卸载");
     }
 
     private void loadCommand() {
@@ -125,6 +120,37 @@ public class Core extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CommandListener(), this);
 
         getServer().getPluginManager().registerEvents(new DebugCommandListener(), this);
+    }
+
+    /**
+     * 获取全局插件对象
+     */
+    public static Plugin getPlugin() {
+        return Bukkit.getServer().getPluginManager().getPlugin(PLUGIN_TAG);
+    }
+
+    public static void printInfo(String message) {
+        sender.sendMessage(LOG_PREFIX + message);
+    }
+
+    public static void printWarn(String message) {
+        sender.sendMessage(ChatColor.YELLOW + LOG_PREFIX + message);
+    }
+
+    public static void printErr(String message) {
+        sender.sendMessage(ChatColor.RED + LOG_PREFIX + message);
+    }
+
+    public static void sendInfo(CommandSender sender, String message) {
+        sender.sendMessage(message);
+    }
+
+    public static void sendWarn(CommandSender sender, String message) {
+        sender.sendMessage(ChatColor.YELLOW + message);
+    }
+
+    public static void sendErr(CommandSender sender, String message) {
+        sender.sendMessage(ChatColor.RED + message);
     }
 
 }

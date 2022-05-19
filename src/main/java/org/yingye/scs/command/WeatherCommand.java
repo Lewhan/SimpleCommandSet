@@ -6,9 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.slf4j.Logger;
 import org.yingye.scs.core.Config;
 import org.yingye.scs.core.Core;
 import org.yingye.scs.enums.WeatherStatus;
@@ -17,8 +15,7 @@ import org.yingye.scs.util.SimpleUtil;
 import java.util.HashMap;
 
 public class WeatherCommand implements CommandExecutor {
-    private static final Logger log = Core.log;
-    private static final Plugin plugin = Core.GLOBAL_PLUGIN;
+
     public static final HashMap<World, WeatherStatus> LOCKED_WORLD = new HashMap<>();
     public static final HashMap<String, String> WEATHER_TYPE = new HashMap<>();
     public static final HashMap<World, BukkitRunnable> MONITORS = new HashMap<>();
@@ -159,7 +156,7 @@ public class WeatherCommand implements CommandExecutor {
         }
         monitor(world);
         sender.sendMessage(ChatColor.GREEN + "已将世界(" + ChatColor.AQUA + world.getName() + ChatColor.GREEN + ")的天气设为: " + WEATHER_TYPE.get(weather));
-        log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",将世界: " + world.getName() + "的天气锁定为: " + WEATHER_TYPE.get(weather));
+        Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",将世界: " + world.getName() + "的天气锁定为: " + WEATHER_TYPE.get(weather));
     }
 
     /**
@@ -190,7 +187,7 @@ public class WeatherCommand implements CommandExecutor {
             runnable.cancel();
         }
         sender.sendMessage(ChatColor.GREEN + "已解除世界(" + ChatColor.AQUA + world.getName() + ChatColor.GREEN + ")的天气锁定");
-        log.info(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",解除了世界: " + world.getName() + "的天气锁定");
+        Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",解除了世界: " + world.getName() + "的天气锁定");
     }
 
     /**
@@ -218,7 +215,7 @@ public class WeatherCommand implements CommandExecutor {
                 world.setWeatherDuration(tick);
             }
         };
-        runnable.runTaskTimer(plugin, world.getWeatherDuration(), tick - 20);
+        runnable.runTaskTimer(Core.getPlugin(), world.getWeatherDuration(), tick - 20);
         MONITORS.put(world, runnable);
     }
 

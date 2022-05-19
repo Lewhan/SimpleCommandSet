@@ -7,9 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.slf4j.Logger;
 import org.yingye.scs.core.Core;
 import org.yingye.scs.util.SimpleUtil;
 
@@ -19,9 +17,6 @@ import java.util.Map;
 
 @SuppressWarnings("all")
 public class WorldCommand implements CommandExecutor {
-
-    private static final Logger log = Core.log;
-    private static final Plugin plugin = Core.GLOBAL_PLUGIN;
 
     private static final HashMap<String, World.Environment> WORLD_TYPE = new HashMap(Map.of("normal", World.Environment.NORMAL, "nether", World.Environment.NETHER, "end", World.Environment.THE_END));
     private static final HashMap<String, String> WORLD_TYPE_NAME = new HashMap(Map.of("normal", "正常", "nether", "下界", "end", "末地"));
@@ -47,7 +42,9 @@ public class WorldCommand implements CommandExecutor {
             deleteWorld(sender, args);
         } else if (label.equals("tp")) {
             if (sender instanceof Player) {
-                if (args.length > 1) {
+                if(args.length == 1) {
+                    sender.sendMessage(ChatColor.RED + "请输入要前往的世界名");
+                } else {
                     tpWorld((Player) sender, args[1]);
                 }
             } else {
@@ -87,7 +84,10 @@ public class WorldCommand implements CommandExecutor {
             creator.environment(environment);
         }
         sender.getServer().createWorld(creator);
-        log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",创建了世界: " + worldName + ",世界类型为: " + WORLD_TYPE_NAME.get(type));
+        sender.sendMessage(ChatColor.GREEN + "创建成功");
+        if (sender instanceof Player) {
+            Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",创建了世界: " + worldName + ",世界类型为: " + WORLD_TYPE_NAME.get(type));
+        }
     }
 
     private void deleteWorld(CommandSender sender, String[] args) {
@@ -109,7 +109,7 @@ public class WorldCommand implements CommandExecutor {
             public void run() {
                 deleteWorld(sender, args[1], why);
             }
-        }.runTaskLater(plugin, 20);
+        }.runTaskLater(Core.getPlugin(), 20);
     }
 
     /**
@@ -128,7 +128,10 @@ public class WorldCommand implements CommandExecutor {
             File file = world.getWorldFolder();
             removeDir(file);
         }
-        log.warn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",删除了世界: " + worldName);
+        sender.sendMessage(ChatColor.GREEN + "删除成功");
+        if (sender instanceof Player) {
+            Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",删除了世界: " + worldName);
+        }
     }
 
     /**
