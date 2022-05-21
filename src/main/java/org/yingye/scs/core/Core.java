@@ -92,6 +92,9 @@ public class Core extends JavaPlugin {
 
         // world
         getCommand("world").setExecutor(new WorldCommand());
+
+        // other
+        getCommand("remake").setExecutor(new OtherCommand());
     }
 
     private void loadTabCompleter() {

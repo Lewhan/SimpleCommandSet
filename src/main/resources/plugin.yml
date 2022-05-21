@@ -1,6 +1,6 @@
 name: SimpleCommandSet
 main: org.yingye.scs.core.Core
-version: 0.1.4
+version: 0.1.5
 api-version: 1.17
 
 commands:
@@ -58,6 +58,9 @@ commands:
   world:
     permission: scs.world.world
 
+  remake:
+    permission: scs.other.remake
+
 permissions:
   # 权限集
   scs.tpa.*:
@@ -86,6 +89,10 @@ permissions:
     weatherinfo: true
     weatherlock: true
     weatherunlock: true
+
+  scs.other.*:
+    children:
+      remake: true
 
   # tpa
   scs.tpa.tpa:
@@ -135,4 +142,8 @@ permissions:
   scs.world.weather.weatherunlock:
     default: op
   scs.world.weather.weatherinfo:
+    default: true
+
+  # other
+  scs.other.remake:
     default: true
