@@ -24,7 +24,7 @@ java {
 }
 
 group = 'org.yingye'
-version = '0.1.4-beta1'
+version = '0.1.5'
 description = 'SimpleCommandSet'
 
 tasks.withType(JavaCompile) {
