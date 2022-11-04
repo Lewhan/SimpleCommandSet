@@ -16,7 +16,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
+    compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0-rc3'
 }
 
 java {
@@ -24,9 +25,15 @@ java {
 }
 
 group = 'org.yingye'
-version = '0.1.5'
+version = '0.1.6'
 description = 'SimpleCommandSet'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+task fatJar(type: Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }

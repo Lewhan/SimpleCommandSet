@@ -42,7 +42,7 @@ public class Config {
             loadHomeConfig(configuration, bw);
             loadWeatherConfig(configuration, bw);
             bw.close();
-            Core.printInfo(ChatColor.GREEN + "配置文件加载完毕，日志路径: " + outLog.getAbsolutePath());
+            Core.printSuccess("配置文件加载完毕，日志路径: " + outLog.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
             Core.printErr("配置文件加载失败，日志路径: " + outLog.getAbsolutePath());
@@ -117,6 +117,10 @@ public class Config {
         bw.newLine();
     }
 
+    public static File getPlayerConfigFile(String name) {
+        return new File(HOME.get("savePath").toString() + name + ".yml");
+    }
+
     @SuppressWarnings("all")
     public static YamlConfiguration getHomeConfig(Player player) {
         File dir = new File(HOME.get("savePath").toString());
@@ -124,13 +128,13 @@ public class Config {
             dir.mkdirs();
         }
         // 文件可能不存在
-        File homeFile = new File(HOME.get("savePath").toString() + player.getName() + ".yml");
+        File homeFile = getPlayerConfigFile(player.getName());
         return checkConfigAvailability(homeFile, player);
     }
 
     public static void saveHomeConfig(YamlConfiguration config, Player player) {
         try {
-            config.save(new File(HOME.get("savePath").toString() + player.getName() + ".yml"));
+            config.save(getPlayerConfigFile(player.getName()));
         } catch (Exception e) {
             player.sendMessage(ChatColor.RED + "返回点设置失败");
             e.printStackTrace();

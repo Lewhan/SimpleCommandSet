@@ -4,23 +4,23 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WorldCompleter implements TabCompleter {
+public class WorldTabCompleter implements TabCompleter {
 
-    @SuppressWarnings("all")
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args){
         if (alias.equals("weatherlock") || alias.equals("weatherunlock")) {
             return weatherComplete(sender, alias, args);
         } else if (alias.equals("world")) {
             return worldComplete(sender, args);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     private List<String> weatherComplete(CommandSender sender, String cmd, String[] args) {

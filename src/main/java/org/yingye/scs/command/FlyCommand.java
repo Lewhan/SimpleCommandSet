@@ -8,8 +8,17 @@ import org.bukkit.entity.Player;
 import org.yingye.scs.core.Core;
 import org.yingye.scs.util.SimpleUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("all")
 public class FlyCommand implements CommandExecutor {
+
+    private static final List<Player> FLY_PLAYERS = new ArrayList<>();
+
+    public static List<Player> getFlyPlayers() {
+        return List.copyOf(FLY_PLAYERS);
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -34,10 +43,12 @@ public class FlyCommand implements CommandExecutor {
                     player.setAllowFlight(false);
                     sender.sendMessage(ChatColor.GREEN + "已关闭玩家(" + args[0] + ")的飞行模式");
                     player.sendMessage(ChatColor.RED + "飞行模式已关闭");
+                    FLY_PLAYERS.remove(player);
                 } else {
                     player.setAllowFlight(true);
                     sender.sendMessage(ChatColor.GREEN + "已开启玩家(" + args[0] + ")的飞行模式");
                     player.sendMessage(ChatColor.GREEN + "飞行模式已开启");
+                    FLY_PLAYERS.add(player);
                 }
             } else {
                 sender.sendMessage(ChatColor.GREEN + "未找到名为(" + args[0] + ")的玩家");
@@ -50,10 +61,12 @@ public class FlyCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.GREEN + "已开启玩家(" + args[0] + ")的飞行模式");
                     player.sendMessage(ChatColor.GREEN + "飞行模式已开启");
                     Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getName() + "的飞行模式");
+                    FLY_PLAYERS.add(player);
                 } else if (args[1].equalsIgnoreCase("off")) {
                     player.setAllowFlight(false);
                     sender.sendMessage(ChatColor.GREEN + "已关闭玩家(" + args[0] + ")的飞行模式");
                     player.sendMessage(ChatColor.RED + "飞行模式已关闭");
+                    FLY_PLAYERS.remove(player);
                 }
             } else {
                 sender.sendMessage(ChatColor.GREEN + "未找到名为(" + args[0] + ")的玩家");
@@ -66,9 +79,11 @@ public class FlyCommand implements CommandExecutor {
         if (player.getAllowFlight()) {
             player.setAllowFlight(false);
             player.sendMessage(ChatColor.RED + "飞行模式已关闭");
+            FLY_PLAYERS.remove(player);
         } else {
             player.setAllowFlight(true);
             player.sendMessage(ChatColor.GREEN + "飞行模式已开启");
+            FLY_PLAYERS.add(player);
         }
     }
 }

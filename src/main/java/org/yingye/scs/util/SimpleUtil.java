@@ -1,16 +1,21 @@
 package org.yingye.scs.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class SimpleUtil {
 
@@ -68,6 +73,34 @@ public class SimpleUtil {
     public static String getFormatDate(Date date, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
+    }
+
+    @SuppressWarnings("all")
+    public static HashMap parseYamlToMap(File file) throws FileNotFoundException {
+        Yaml yaml = new Yaml();
+        return yaml.loadAs(new FileInputStream(file), HashMap.class);
+    }
+
+    public static JsonNode parseYamlToJson(File file) throws FileNotFoundException, JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readTree(mapper.writeValueAsString(parseYamlToMap(file)));
+    }
+
+    public static String parseYamlToJsonString(File file) throws FileNotFoundException, JsonProcessingException {
+        return parseYamlToJson(file).toPrettyString();
+    }
+
+    public static boolean isPositive(String str) {
+        try {
+            double d = Double.parseDouble(str);
+            return d >= 0;
+        }catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean notPositive(String str) {
+        return !isPositive(str);
     }
 
 }

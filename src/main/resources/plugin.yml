@@ -1,6 +1,6 @@
 name: SimpleCommandSet
 main: org.yingye.scs.core.Core
-version: 0.1.5
+version: 0.1.6
 api-version: 1.17
 
 commands:
@@ -46,6 +46,9 @@ commands:
   cl:
     permission: scs.debug.cl
 
+  showdata:
+    permission: scs.debug.showdata
+
   weatherinfo:
     permission: scs.world.weather.weatherinfo
 
@@ -80,6 +83,7 @@ permissions:
       ohk: true
       hb: true
       cl: true
+      showdata: true
   scs.world.*:
     children:
       world: true
@@ -121,6 +125,8 @@ permissions:
     default: op
   scs.debug.cl:
     default: op
+  scs.debug.showdata:
+    default: true
 
   # back
   scs.back:

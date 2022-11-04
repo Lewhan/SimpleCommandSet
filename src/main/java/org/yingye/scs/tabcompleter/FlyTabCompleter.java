@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,8 @@ public class FlyTabCompleter implements TabCompleter {
      * @param args    命令参数, 1:要提示的参数一,2:要提示的参数二
      * @return 用于提示的参数
      */
-    @SuppressWarnings("all")
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         ArrayList<String> list = new ArrayList<>();
         if (args.length == 1) {
             Server server = sender.getServer();
