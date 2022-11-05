@@ -61,7 +61,8 @@ public class DebugTabCompleter implements TabCompleter {
                 complete = List.of("all", "limit");
             }
         } else if (args.length > 1) {
-            if (args.length == 3 && args[0].equalsIgnoreCase("limit") && sender.isOp()) {
+            if ((args.length == 2 && args[0].equalsIgnoreCase("all") && sender.isOp())
+                    || (args.length == 3 && args[0].equalsIgnoreCase("limit") && sender.isOp())) {
                 complete = getAllPlayerConfig();
             }
         }

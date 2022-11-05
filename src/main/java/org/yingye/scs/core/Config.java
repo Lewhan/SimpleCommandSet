@@ -6,7 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.yaml.snakeyaml.Yaml;
-import org.yingye.scs.util.SimpleUtil;
+import org.yingye.scs.util.BukkitTool;
 
 import java.io.*;
 import java.util.HashMap;
@@ -182,7 +182,7 @@ public class Config {
                     if (homeMap != null && !homeMap.isEmpty()) {
                         Set<String> homeKeys = homeMap.keySet();
                         for (String key : homeKeys) {
-                            if (SimpleUtil.createLocation(server, homeMap.get(key)) == null) {
+                            if (BukkitTool.createLocation(server, homeMap.get(key)) == null) {
                                 homeMap.remove(key);
                                 sb.append(ChatColor.RED + "家:( " + ChatColor.AQUA + key + ChatColor.RED + " )" + "所在的世界已不存在，从home中移除\n");
                             }
@@ -193,7 +193,7 @@ public class Config {
                 if (map.containsKey("back")) {
                     Map<String, Map> backMap = map.get("back");
                     if (backMap != null && !backMap.isEmpty()) {
-                        if (SimpleUtil.createLocation(server, backMap.get("back")) == null) {
+                        if (BukkitTool.createLocation(server, backMap.get("back")) == null) {
                             backMap.remove("back");
                             sb.append(ChatColor.RED + "返回点所在的世界已不存在，已移除");
                         }

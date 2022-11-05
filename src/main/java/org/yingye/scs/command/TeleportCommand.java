@@ -18,18 +18,22 @@ public class TeleportCommand implements CommandExecutor {
      * 存放等待使用的Runnable<br>
      * ArrayList<String> 0:发起者的玩家名,1:目标玩家名,2:命令名
      */
-    private static final HashMap<ArrayList<String>, BukkitRunnable> DATA = new HashMap<>();
+    private static final Map<ArrayList<String>, BukkitRunnable> DATA = new HashMap<>();
 
     /**
      * 存放销毁TP请求的Runnable
      * ArrayList<String> 0:发起者的玩家名,1:目标玩家名,2:命令名
      */
-    private static final HashMap<ArrayList<String>, BukkitRunnable> DESTROY = new HashMap<>();
+    private static final Map<ArrayList<String>, BukkitRunnable> DESTROY = new HashMap<>();
 
     /**
      * 进入命令冷却状态的玩家
      */
-    private static final HashSet<Player> WAIT = new HashSet<>();
+    private static final Set<Player> WAIT = new HashSet<>();
+
+    public static Map<ArrayList<String>, BukkitRunnable> getRequests() {
+        return Map.copyOf(DATA);
+    }
 
     /**
      * 命令触发器 & 方法调配中心，调用命令对应的方法
@@ -75,13 +79,13 @@ public class TeleportCommand implements CommandExecutor {
      */
     private void teleport(Player player, String label, String[] args) {
         if ((label.equalsIgnoreCase("tpa") || label.equalsIgnoreCase("simplecommandset:tpa")) && WAIT.contains(player)) {
-            player.sendMessage("tpa命令的使用间隔为: " + Config.TELEPORT.get("cdTime") + " 秒");
+            player.sendMessage(ChatColor.YELLOW + "tpa命令的使用间隔为: " + ChatColor.AQUA + Config.TELEPORT.get("cdTime") + ChatColor.YELLOW + " 秒");
             return;
         }
 
         Server server = player.getServer();
         // 判断参数长度是否有传入玩家名
-        if (args.length <= 0) {
+        if (args.length == 0) {
             player.sendMessage(ChatColor.RED + "请输入玩家名");
             return;
         }
@@ -89,7 +93,7 @@ public class TeleportCommand implements CommandExecutor {
         // 获取目标玩家实体
         Player targetPlayer = server.getPlayerExact(args[0]);
         if (targetPlayer == null) {
-            player.sendMessage(ChatColor.GREEN + "未找到名为(" + ChatColor.AQUA + args[0] + ChatColor.GREEN + ")的玩家");
+            player.sendMessage(ChatColor.YELLOW + "未找到名为(" + ChatColor.AQUA + args[0] + ChatColor.YELLOW + ")的玩家");
             return;
         }
 
@@ -105,7 +109,7 @@ public class TeleportCommand implements CommandExecutor {
         param.add(targetPlayer.getName());
         param.add(label);
         if (DATA.get(param) != null) {
-            player.sendMessage(ChatColor.GREEN + "您已存在一个发送给该玩家的 " + label + " 请求,请等待对方接受或拒绝请求,或请求超时后再次发送请求");
+            player.sendMessage(ChatColor.YELLOW + "您已存在一个发送给该玩家的" + ChatColor.AQUA + label + ChatColor.YELLOW + "请求,请等待对方接受或拒绝请求,或请求超时后再次发送请求");
             return;
         }
 
@@ -136,13 +140,13 @@ public class TeleportCommand implements CommandExecutor {
         BukkitRunnable destroy = new BukkitRunnable() {
             @Override
             public void run() {
-                if(isCancelled()) {
+                if (isCancelled()) {
                     return;
                 }
                 new Thread(DATA.remove(param)).interrupt();
                 DESTROY.remove(param);
-                player.sendMessage(ChatColor.YELLOW + "发送给(" + ChatColor.AQUA + targetPlayer.getName() + ChatColor.YELLOW + ")的 " + label + " 请求已超时");
-                targetPlayer.sendMessage(ChatColor.YELLOW + "来自玩家(" + ChatColor.AQUA + player.getName() + ChatColor.YELLOW + ")的 " + label + " 请求已超时");
+                player.sendMessage(ChatColor.YELLOW + "发送给(" + ChatColor.AQUA + targetPlayer.getName() + ChatColor.YELLOW + ")的" + ChatColor.AQUA + label + ChatColor.YELLOW + "请求已超时");
+                targetPlayer.sendMessage(ChatColor.YELLOW + "来自玩家(" + ChatColor.AQUA + player.getName() + ChatColor.YELLOW + ")的" + ChatColor.AQUA + label + ChatColor.YELLOW + "请求已超时");
             }
         };
 
@@ -161,7 +165,7 @@ public class TeleportCommand implements CommandExecutor {
      */
     private void accept(Player player, String[] args) {
         Server server = player.getServer();
-        if (args.length <= 0) {
+        if (args.length == 0) {
             accept(server, player);
         } else if (args.length == 1) {
             accept(server, player, args[0]);
@@ -181,10 +185,10 @@ public class TeleportCommand implements CommandExecutor {
     private void accept(Server server, Player player, String sourceName, String method) {
         Player source = server.getPlayerExact(sourceName);
         if (source == null) {
-            player.sendMessage(ChatColor.GREEN + "未找到该玩家，该玩家可能已离线");
+            player.sendMessage(ChatColor.YELLOW + "未找到该玩家，该玩家可能已离线");
             return;
         }
-        ArrayList<String> key = (ArrayList<String>) Arrays.asList(new String[]{sourceName, player.getName(), method});
+        ArrayList<String> key = new ArrayList<>(Arrays.asList(sourceName, player.getName(), method));
         BukkitRunnable runnable = DATA.remove(key);
         BukkitRunnable destroy = DESTROY.remove(key);
         sendAcceptMessage(runnable, destroy, player, Objects.requireNonNull(server.getPlayerExact(sourceName)), method);
@@ -200,14 +204,14 @@ public class TeleportCommand implements CommandExecutor {
     private void accept(Server server, Player player, String sourceName) {
         Player source = server.getPlayerExact(sourceName);
         if (source == null) {
-            player.sendMessage(ChatColor.GREEN + "未找到该玩家，该玩家可能已离线");
+            player.sendMessage(ChatColor.YELLOW + "未找到该玩家，该玩家可能已离线");
             return;
         }
 
         List<ArrayList<String>> keys = DATA.keySet()
                 .stream()
                 .filter(al -> al.get(0).equals(sourceName) && al.get(1).equals(player.getName())).toList();
-        if (keys.size() <= 0) {
+        if (keys.size() == 0) {
             player.sendMessage(ChatColor.GREEN + "未找到玩家(" + ChatColor.AQUA + sourceName + ChatColor.GREEN + ")对你发送的请求");
             return;
         }
@@ -228,8 +232,8 @@ public class TeleportCommand implements CommandExecutor {
                 .stream()
                 .filter(al -> al.get(1).equals(player.getName()))
                 .toList();
-        if (keys.size() <= 0) {
-            player.sendMessage(ChatColor.GREEN + "没有待处理的请求");
+        if (keys.size() == 0) {
+            player.sendMessage(ChatColor.YELLOW + "没有待处理的请求");
             return;
         }
 
@@ -249,8 +253,8 @@ public class TeleportCommand implements CommandExecutor {
      * @param method   请求的方式
      */
     private void sendAcceptMessage(BukkitRunnable runnable, BukkitRunnable destroy, Player player, Player source, String method) {
-        player.sendMessage(ChatColor.GREEN + "你接受了玩家(" + ChatColor.AQUA + source.getName() + ChatColor.GREEN + ")的 " + method + " 请求");
-        source.sendMessage(ChatColor.GREEN + "玩家(" + ChatColor.AQUA + player.getName() + ChatColor.GREEN + ")接受了你的 " + method + " 请求,将在" + Config.TELEPORT.get("waitTime") + "秒后进行传送");
+        player.sendMessage(ChatColor.GREEN + "你接受了玩家(" + ChatColor.AQUA + source.getName() + ChatColor.GREEN + ")的" + ChatColor.AQUA + method + ChatColor.GREEN + "请求");
+        source.sendMessage(ChatColor.GREEN + "玩家(" + ChatColor.AQUA + player.getName() + ChatColor.GREEN + ")接受了你的" + ChatColor.AQUA + method + ChatColor.GREEN + "请求,将在" + Config.TELEPORT.get("waitTime") + "秒后进行传送");
         destroy.cancel();
         runnable.runTaskLater(Core.getPlugin(), Config.TELEPORT.get("waitTime") * 20L);
     }
@@ -284,7 +288,7 @@ public class TeleportCommand implements CommandExecutor {
      */
     private void deAccept(Player player, String[] args) {
         Server server = player.getServer();
-        if (args.length <= 0) {
+        if (args.length == 0) {
             deAccept(player, server);
         } else if (args.length == 1) {
             deAccept(player, server, args[0]);
@@ -304,14 +308,14 @@ public class TeleportCommand implements CommandExecutor {
     private void deAccept(Player player, Server server, String sourceName, String method) {
         Player source = server.getPlayerExact(sourceName);
         if (source == null) {
-            player.sendMessage(ChatColor.GREEN + "未找到该玩家，该玩家可能已离线");
+            player.sendMessage(ChatColor.YELLOW + "未找到该玩家，该玩家可能已离线");
             return;
         }
 
-        ArrayList<String> key = (ArrayList<String>) Arrays.asList(new String[]{sourceName, player.getName(), method});
+        ArrayList<String> key = new ArrayList<>(Arrays.asList(sourceName, player.getName(), method));
         BukkitRunnable bukkitRunnable = DATA.remove(key);
         if (bukkitRunnable == null) {
-            player.sendMessage(ChatColor.GREEN + "未找到玩家(" + ChatColor.AQUA + sourceName + ChatColor.GREEN + ")对你发送的 " + method + " 请求");
+            player.sendMessage(ChatColor.YELLOW + "未找到玩家(" + ChatColor.AQUA + sourceName + ChatColor.YELLOW + ")对你发送的" + ChatColor.AQUA + method + ChatColor.YELLOW + "请求");
             return;
         }
 
@@ -328,15 +332,15 @@ public class TeleportCommand implements CommandExecutor {
     private void deAccept(Player player, Server server, String sourceName) {
         Player source = server.getPlayerExact(sourceName);
         if (source == null) {
-            player.sendMessage(ChatColor.GREEN + "未找到该玩家，该玩家可能已离线");
+            player.sendMessage(ChatColor.YELLOW + "未找到该玩家，该玩家可能已离线");
             return;
         }
 
         List<ArrayList<String>> collect = DATA.keySet()
                 .stream()
                 .filter(al -> al.get(0).equals(sourceName) && al.get(1).equals(player.getName())).toList();
-        if (collect.size() <= 0) {
-            player.sendMessage(ChatColor.GREEN + "未找到玩家(" + ChatColor.AQUA + sourceName + ChatColor.GREEN + ")对你发送的请求");
+        if (collect.size() == 0) {
+            player.sendMessage(ChatColor.YELLOW + "未找到玩家(" + ChatColor.AQUA + sourceName + ChatColor.YELLOW + ")对你发送的请求");
             return;
         }
 
@@ -352,8 +356,8 @@ public class TeleportCommand implements CommandExecutor {
      */
     private void deAccept(Player player, Server server) {
         List<ArrayList<String>> keys = DATA.keySet().stream().filter(al -> al.get(1).equals(player.getName())).toList();
-        if (keys.size() <= 0) {
-            player.sendMessage(ChatColor.GREEN + "还没有玩家向你发起请求");
+        if (keys.size() == 0) {
+            player.sendMessage(ChatColor.YELLOW + "还没有玩家向你发起请求");
             return;
         }
 
@@ -370,7 +374,7 @@ public class TeleportCommand implements CommandExecutor {
      */
     private void clearTeleportRequest(Player player, String[] args) {
         Server server = player.getServer();
-        if (args.length <= 0) {
+        if (args.length == 0) {
             clearTeleportRequest(player, server);
         } else {
             clearTeleportRequest(player, server, args[0]);
@@ -422,9 +426,9 @@ public class TeleportCommand implements CommandExecutor {
     private void sendDeAcceptMessage(BukkitRunnable runnable, Player player, Player source, String sourceName, String method, ArrayList<String> key) {
         new Thread((runnable)).interrupt();
         DESTROY.remove(key).cancel();
-        player.sendMessage(ChatColor.GREEN + "你拒绝了玩家(" + ChatColor.AQUA + sourceName + ChatColor.GREEN + ")的 " + method + " 请求");
+        player.sendMessage(ChatColor.GREEN + "你拒绝了玩家(" + ChatColor.AQUA + sourceName + ChatColor.GREEN + ")的" + ChatColor.AQUA + method + ChatColor.GREEN + "请求");
         if (source != null) {
-            source.sendMessage(ChatColor.GREEN + "玩家(" + ChatColor.AQUA + player.getName() + ChatColor.GREEN + ")拒绝了你的 " + method + " 请求");
+            source.sendMessage(ChatColor.YELLOW + "玩家(" + ChatColor.AQUA + player.getName() + ChatColor.YELLOW + ")拒绝了你的" + ChatColor.AQUA + method + ChatColor.YELLOW + "请求");
         }
     }
 

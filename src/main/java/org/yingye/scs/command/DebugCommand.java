@@ -12,7 +12,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.yingye.scs.core.Config;
 import org.yingye.scs.core.Core;
-import org.yingye.scs.util.SimpleUtil;
+import org.yingye.scs.util.Auxiliary;
+import org.yingye.scs.util.Parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -100,7 +101,7 @@ public class DebugCommand implements CommandExecutor {
                 return;
             }
 
-            if (SimpleUtil.notPositive(args[0])) {
+            if (Auxiliary.notPositive(args[0])) {
                 sender.sendMessage(ChatColor.RED + "输入的血量有误");
                 return;
             }
@@ -113,7 +114,7 @@ public class DebugCommand implements CommandExecutor {
                 return;
             }
 
-            if (SimpleUtil.notPositive(args[1])) {
+            if (Auxiliary.notPositive(args[1])) {
                 sender.sendMessage(ChatColor.RED + "输入的血量有误");
                 return;
             }
@@ -127,7 +128,7 @@ public class DebugCommand implements CommandExecutor {
         attribute.setBaseValue(health);
         player.setHealth(health);
         sender.sendMessage(ChatColor.GREEN + "成功将玩家(" + ChatColor.AQUA + player.getName() + ChatColor.GREEN + ")的血量上限设置为: " + health);
-        Core.printWarn(SimpleUtil.getFormatDate() + ChatColor.GREEN + " --- 管理员: " + sender.getName() + ",将玩家: " + player.getName() + "的血量上限更改为: " + health);
+        Core.printWarn(Auxiliary.getFormatDate() + ChatColor.GREEN + " --- 管理员: " + sender.getName() + ",将玩家: " + player.getName() + "的血量上限更改为: " + health);
     }
 
     private void currentLocation(CommandSender sender, String[] args) {
@@ -175,7 +176,7 @@ public class DebugCommand implements CommandExecutor {
             } else if (mode.equalsIgnoreCase("flylist")) {
                 Core.sendInfo(sender, Arrays.toString(FlyCommand.getFlyPlayers().stream().map(player -> player.getName()).toArray()));
             } else if (mode.equalsIgnoreCase("godlist")) {
-                Core.sendInfo(sender, Arrays.toString(GodCommand.getPlayers().stream().map(player -> player.getName()).toArray()));
+                Core.sendInfo(sender, Arrays.toString(GodCommand.getGodPlayers().stream().map(player -> player.getName()).toArray()));
             } else if (mode.equalsIgnoreCase("ohklist")) {
                 Core.sendInfo(sender, Arrays.toString(DebugCommand.HERCLUES.stream().map(player -> player.getName()).toArray()));
             }
@@ -221,7 +222,7 @@ public class DebugCommand implements CommandExecutor {
 
     private void showAnyPlayerAllDataWithConsole(CommandSender sender, String[] args) throws FileNotFoundException, JsonProcessingException {
         File file = Config.getPlayerConfigFile(args[1]);
-        Core.printInfo(SimpleUtil.parseYamlToJsonString(file));
+        Core.printInfo(Parser.parseYamlToJsonString(file));
     }
 
     private void showAnyPlayerlimitDataWithConsole(CommandSender sender, String[] args) throws FileNotFoundException, JsonProcessingException {
@@ -243,38 +244,48 @@ public class DebugCommand implements CommandExecutor {
             Core.sendErr(player, "未找到数据文件，你可能尚未使用过tp、back、home命令");
             return;
         }
-        Core.sendInfo(player, SimpleUtil.parseYamlToJsonString(file));
+        Core.sendInfo(player, Parser.parseYamlToJsonString(file));
     }
 
     private void showAnyPlayerData(Player player, String[] args) throws IOException, InvalidConfigurationException {
         String mode = args[0];
-        if(mode.equalsIgnoreCase("all")) {
-            showSelfData(player);
-        } else {
-            if (args.length == 1) {
-                Core.sendErr(player, "请输入要查询的项");
+        if (args.length == 1) {
+            if (mode.equalsIgnoreCase("all")) {
+                showSelfData(player);
             } else {
-                try {
-                    if (args.length == 2) {
-                        showAnyPlayerData(player, args[1]);
-                    } else if (args.length >= 3) {
-                        showAnyPlayerData(player, args[1], args[2]);
-                    }
-                } catch (FileNotFoundException e) {
-                    if(args.length >= 3 && player.isOp()) {
-                        Core.sendErr(player, "未找到数据文件，该玩家可能尚未使用过tp、back、home命令");
-                    } else {
-                        Core.sendErr(player, "未找到数据文件，你可能尚未使用过tp、back、home命令");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw e;
+                Core.sendErr(player, "请输入要查询的项");
+            }
+            return;
+        }
+
+        try {
+            if (mode.equalsIgnoreCase("all")) {
+                showAnyPlayerAllData(player, args.length >= 2 && player.isOp() ? args[1] : player.getName());
+            } else {
+                if (args.length == 2) {
+                    showAnyPlayerLimitData(player, args[1]);
+                } else {
+                    showAnyPlayerLimitData(player, args[1], args[2]);
                 }
             }
+        } catch (FileNotFoundException e) {
+            if (args.length >= 3 && player.isOp()) {
+                Core.sendErr(player, "未找到数据文件，该玩家可能尚未使用过tp、back、home命令");
+            } else {
+                Core.sendErr(player, "未找到数据文件，你可能尚未使用过tp、back、home命令");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
-    private void showAnyPlayerData(Player player, String path) throws IOException, InvalidConfigurationException {
+    private void showAnyPlayerAllData(Player player, String name) throws FileNotFoundException, JsonProcessingException {
+        File file = Config.getPlayerConfigFile(name);
+        Core.sendInfo(player, name + ": \n" + Parser.parseYamlToJsonString(file));
+    }
+
+    private void showAnyPlayerLimitData(Player player, String path) throws IOException, InvalidConfigurationException {
         JsonNode node = deepFindPath(player.getName(), path);
         if (node.isEmpty()) {
             Core.sendInfo(player, "没有找到指定项");
@@ -283,9 +294,9 @@ public class DebugCommand implements CommandExecutor {
         }
     }
 
-    private void showAnyPlayerData(Player player, String path, String name) throws IOException, InvalidConfigurationException {
+    private void showAnyPlayerLimitData(Player player, String path, String name) throws IOException, InvalidConfigurationException {
         if (!player.isOp()) {
-            showAnyPlayerData(player, path);
+            showAnyPlayerLimitData(player, path);
         } else {
             JsonNode node = deepFindPath(name, path);
             if (node.isEmpty()) {
@@ -297,7 +308,7 @@ public class DebugCommand implements CommandExecutor {
     }
 
     private JsonNode deepFindPath(String name, String path) throws FileNotFoundException, JsonProcessingException {
-        JsonNode root = SimpleUtil.parseYamlToJson(Config.getPlayerConfigFile(name));
+        JsonNode root = Parser.parseYamlToJson(Config.getPlayerConfigFile(name));
         if (path.indexOf(".") != -1) {
             String[] strs = path.split("\\.");
             JsonNode t = null;

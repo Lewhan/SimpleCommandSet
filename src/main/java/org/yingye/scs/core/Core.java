@@ -103,10 +103,14 @@ public class Core extends JavaPlugin {
     private void loadTabCompleter() {
         getCommand("tpa").setTabCompleter(new TeleportTabCompleter());
         getCommand("tpahere").setTabCompleter(new TeleportTabCompleter());
+        getCommand("accept").setTabCompleter(new TeleportTabCompleter());
+        getCommand("deaccept").setTabCompleter(new TeleportTabCompleter());
+        getCommand("tpclear").setTabCompleter(new EmptyTabCompleter());
 
-        getCommand("fly").setTabCompleter(new FlyTabCompleter());
+        getCommand("fly").setTabCompleter(new GodAndFlyTabCompleter());
 
-        // 不应该有选项提示，随便注册一个提示器
+        getCommand("god").setTabCompleter(new GodAndFlyTabCompleter());
+
         getCommand("back").setTabCompleter(new EmptyTabCompleter());
 
         getCommand("home").setTabCompleter(new HomeTabCompleter());

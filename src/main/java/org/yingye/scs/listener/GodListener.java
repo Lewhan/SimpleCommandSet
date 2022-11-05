@@ -15,7 +15,7 @@ public class GodListener implements Listener {
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player obj) {
-            HashSet<Player> players = GodCommand.getPlayers();
+            HashSet<Player> players = GodCommand.getGodPlayers();
             for (Player player : players) {
                 if (obj == player) {
                     event.setCancelled(true);
@@ -30,7 +30,7 @@ public class GodListener implements Listener {
         if (event.getEntity() instanceof Mob) {
 //      System.out.println("生物: " + event.getEntity() + " 的目标是: " + event.getTarget());
             Entity target = event.getTarget();
-            HashSet<Player> players = GodCommand.getPlayers();
+            HashSet<Player> players = GodCommand.getGodPlayers();
             for (Player player : players) {
                 if (target == player) {
                     event.setCancelled(true);

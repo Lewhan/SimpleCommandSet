@@ -9,7 +9,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.yingye.scs.core.Core;
-import org.yingye.scs.util.SimpleUtil;
+import org.yingye.scs.enums.SenderIdentity;
+import org.yingye.scs.util.Auxiliary;
+import org.yingye.scs.util.BukkitTool;
 
 import java.util.HashSet;
 import java.util.List;
@@ -17,82 +19,77 @@ import java.util.List;
 @SuppressWarnings("all")
 public class GodCommand implements CommandExecutor {
 
-    private static final HashSet<Player> players = new HashSet<>();
+    private static final HashSet<Player> GOD_PLAYERS = new HashSet<>();
 
-    public static HashSet<Player> getPlayers() {
-        return players;
+    public static HashSet<Player> getGodPlayers() {
+        return GOD_PLAYERS;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Boolean flag = null;
-        flag = SimpleUtil.users(sender, args);
-        if (flag == null) {
-            Core.printErr("该命令只能由玩家使用");
-            return true;
-        } else if (flag) {
-            op(sender, args);
+        SenderIdentity identity = BukkitTool.getSenderIdentity(sender);
+        if (args.length == 0 && identity == SenderIdentity.CONSOLE) {
+            Core.printErr("无参数模式只能由玩家使用");
         } else {
-            player(sender);
+            op(sender, args);
         }
         return true;
     }
 
     private void op(CommandSender sender, String[] args) {
-        Player player = sender.getServer().getPlayerExact(args[0]);
-        if (player != null) {
-            Boolean flag = null;
+        if (args.length == 0) {
+            self((Player) sender);
+        } else {
+            Player player = sender.getServer().getPlayerExact(args[0]);
+            if (player == null) {
+                Core.sendErr(sender, "未找到名为(" + args[0] + ")的玩家");
+                return;
+            }
+
+            boolean isEnable = false;
             if (args.length == 1) {
-                if (args[0].equalsIgnoreCase("on")) {
-                    flag = true;
-                } else if (args[0].equalsIgnoreCase("off")) {
-                    flag = false;
+                isEnable = !GOD_PLAYERS.contains(player);
+            } else {
+                if (args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("off")) {
+                    isEnable = args[1].equalsIgnoreCase("on");
+                } else {
+                    Core.sendErr(sender, "未知开关操作符");
+                    return;
                 }
             }
-            if (flag == null) {
-                change(sender, player);
-            } else if (flag) {
+
+            if (isEnable) {
                 add(sender, player);
+                now(player);
             } else {
                 remove(sender, player);
             }
-        } else {
-            sender.sendMessage(ChatColor.RED + "未找到名为(" + args[0] + ")的玩家");
         }
     }
 
-    private void player(CommandSender sender) {
-        Player player = (Player) sender;
-        if (players.contains(player)) {
-            players.remove(player);
-            player.sendMessage(ChatColor.RED + "无敌模式已关闭");
+    private void self(Player player) {
+        if (GOD_PLAYERS.contains(player)) {
+            GOD_PLAYERS.remove(player);
+            Core.sendWarn(player, "无敌模式已关闭");
         } else {
-            players.add(player);
-            player.sendMessage(ChatColor.GREEN + "已开启无敌模式");
+            GOD_PLAYERS.add(player);
             now(player);
+            Core.sendSuccess(player, "已开启无敌模式");
         }
     }
 
     private void remove(CommandSender sender, Player player) {
-        players.remove(player);
-        sender.sendMessage(ChatColor.GREEN + "已关闭玩家（" + player.getName() + ")的无敌模式");
-        player.sendMessage(ChatColor.GREEN + "已由管理员关闭你的无敌模式");
+        GOD_PLAYERS.remove(player);
+        Core.sendSuccess(sender, "已关闭玩家(" + player.getName() + ")的无敌模式");
+        Core.sendWarn(player, "已由管理员关闭你的无敌模式");
+        Core.printWarn(Auxiliary.getFormatDate() + " --- 管理员: " + sender.getName() + ",关闭了玩家: " + player.getName() + "的无敌模式");
     }
 
     private void add(CommandSender sender, Player player) {
-        players.add(player);
-        sender.sendMessage(ChatColor.GREEN + "已开启玩家（" + player.getName() + ")的无敌模式");
-        player.sendMessage(ChatColor.GREEN + "已由管理员开启你的无敌模式");
-        Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getName() + "的无敌模式");
-    }
-
-    private void change(CommandSender sender, Player player) {
-        if (players.contains(player)) {
-            remove(sender, player);
-        } else {
-            add(sender, player);
-            now(player);
-        }
+        GOD_PLAYERS.add(player);
+        Core.sendSuccess(sender, "已开启玩家(" + player.getName() + ")的无敌模式");
+        Core.sendSuccess(player, "已由管理员开启你的无敌模式");
+        Core.printWarn(Auxiliary.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getName() + "的无敌模式");
     }
 
     private void now(Player player) {

@@ -9,7 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.yingye.scs.core.Config;
-import org.yingye.scs.util.SimpleUtil;
+import org.yingye.scs.util.BukkitTool;
 
 @SuppressWarnings("all")
 public class BackCommand implements CommandExecutor {
@@ -32,7 +32,7 @@ public class BackCommand implements CommandExecutor {
             }
 
             if (root.contains("back")) {
-                Location location = SimpleUtil.createLocation(sender.getServer(), root.getConfigurationSection("back"));
+                Location location = BukkitTool.createLocation(sender.getServer(), root.getConfigurationSection("back"));
                 if (location != null) {
                     player.teleport(location);
                 } else {

@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.yingye.scs.core.Core;
-import org.yingye.scs.util.SimpleUtil;
+import org.yingye.scs.util.Auxiliary;
 
 import java.io.File;
 import java.util.HashMap;
@@ -86,7 +86,7 @@ public class WorldCommand implements CommandExecutor {
         sender.getServer().createWorld(creator);
         sender.sendMessage(ChatColor.GREEN + "创建成功");
         if (sender instanceof Player) {
-            Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",创建了世界: " + worldName + ",世界类型为: " + WORLD_TYPE_NAME.get(type));
+            Core.printWarn(Auxiliary.getFormatDate() + " --- 管理员: " + sender.getName() + ",创建了世界: " + worldName + ",世界类型为: " + WORLD_TYPE_NAME.get(type));
         }
     }
 
@@ -130,7 +130,7 @@ public class WorldCommand implements CommandExecutor {
         }
         sender.sendMessage(ChatColor.GREEN + "删除成功");
         if (sender instanceof Player) {
-            Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",删除了世界: " + worldName);
+            Core.printWarn(Auxiliary.getFormatDate() + " --- 管理员: " + sender.getName() + ",删除了世界: " + worldName);
         }
     }
 

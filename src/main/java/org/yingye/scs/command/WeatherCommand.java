@@ -10,7 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.yingye.scs.core.Config;
 import org.yingye.scs.core.Core;
 import org.yingye.scs.enums.WeatherStatus;
-import org.yingye.scs.util.SimpleUtil;
+import org.yingye.scs.util.Auxiliary;
 
 import java.util.HashMap;
 
@@ -156,7 +156,7 @@ public class WeatherCommand implements CommandExecutor {
         }
         monitor(world);
         sender.sendMessage(ChatColor.GREEN + "已将世界(" + ChatColor.AQUA + world.getName() + ChatColor.GREEN + ")的天气设为: " + WEATHER_TYPE.get(weather));
-        Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",将世界: " + world.getName() + "的天气锁定为: " + WEATHER_TYPE.get(weather));
+        Core.printWarn(Auxiliary.getFormatDate() + " --- 管理员: " + sender.getName() + ",将世界: " + world.getName() + "的天气锁定为: " + WEATHER_TYPE.get(weather));
     }
 
     /**
@@ -187,7 +187,7 @@ public class WeatherCommand implements CommandExecutor {
             runnable.cancel();
         }
         sender.sendMessage(ChatColor.GREEN + "已解除世界(" + ChatColor.AQUA + world.getName() + ChatColor.GREEN + ")的天气锁定");
-        Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",解除了世界: " + world.getName() + "的天气锁定");
+        Core.printWarn(Auxiliary.getFormatDate() + " --- 管理员: " + sender.getName() + ",解除了世界: " + world.getName() + "的天气锁定");
     }
 
     /**

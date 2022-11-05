@@ -6,7 +6,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.yingye.scs.core.Core;
-import org.yingye.scs.util.SimpleUtil;
+import org.yingye.scs.enums.SenderIdentity;
+import org.yingye.scs.util.Auxiliary;
+import org.yingye.scs.util.BukkitTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,68 +24,66 @@ public class FlyCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Boolean flag = SimpleUtil.users(sender, args);
-        if (flag == null) {
-            sender.sendMessage(ChatColor.RED + "该命令只能由玩家使用");
-        } else if (flag != null && flag) {
+        SenderIdentity identity = BukkitTool.getSenderIdentity(sender);
+        if (args.length == 0 && identity == SenderIdentity.CONSOLE) {
+            Core.printErr("无参数模式只能由玩家使用");
+        } else {
             op(sender, args);
-        } else if (flag != null && flag == false) {
-            player(sender);
         }
         return true;
     }
 
     private void op(CommandSender sender, String[] args) {
-        if (args.length <= 0) {
-            player(sender);
-        } else if (args.length == 1) {
+        if (args.length == 0) {
+            self((Player) sender);
+        } else {
             Player player = sender.getServer().getPlayerExact(args[0]);
-            if (player != null) {
-                if (player.getAllowFlight()) {
-                    player.setAllowFlight(false);
-                    sender.sendMessage(ChatColor.GREEN + "已关闭玩家(" + args[0] + ")的飞行模式");
-                    player.sendMessage(ChatColor.RED + "飞行模式已关闭");
-                    FLY_PLAYERS.remove(player);
+            if (player == null) {
+                Core.sendErr(sender, "未找到名为(" + args[0] + ")的玩家");
+                return;
+            }
+
+            boolean allow = false;
+            if (args.length == 1) {
+                allow = !player.getAllowFlight();
+            } else {
+                if (args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("off")) {
+                    allow = args[1].equalsIgnoreCase("on");
                 } else {
-                    player.setAllowFlight(true);
-                    sender.sendMessage(ChatColor.GREEN + "已开启玩家(" + args[0] + ")的飞行模式");
-                    player.sendMessage(ChatColor.GREEN + "飞行模式已开启");
-                    FLY_PLAYERS.add(player);
+                    Core.sendErr(sender, "未知开关操作符");
+                    return;
                 }
-            } else {
-                sender.sendMessage(ChatColor.GREEN + "未找到名为(" + args[0] + ")的玩家");
             }
-        } else if (args.length == 2) {
-            Player player = sender.getServer().getPlayerExact(args[0]);
-            if (player != null) {
-                if (args[1].equalsIgnoreCase("on")) {
-                    player.setAllowFlight(true);
-                    sender.sendMessage(ChatColor.GREEN + "已开启玩家(" + args[0] + ")的飞行模式");
-                    player.sendMessage(ChatColor.GREEN + "飞行模式已开启");
-                    Core.printWarn(SimpleUtil.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getName() + "的飞行模式");
-                    FLY_PLAYERS.add(player);
-                } else if (args[1].equalsIgnoreCase("off")) {
-                    player.setAllowFlight(false);
-                    sender.sendMessage(ChatColor.GREEN + "已关闭玩家(" + args[0] + ")的飞行模式");
-                    player.sendMessage(ChatColor.RED + "飞行模式已关闭");
-                    FLY_PLAYERS.remove(player);
-                }
-            } else {
-                sender.sendMessage(ChatColor.GREEN + "未找到名为(" + args[0] + ")的玩家");
-            }
+
+            switchFly(sender, player, allow);
         }
     }
 
-    private void player(CommandSender sender) {
-        Player player = (Player) sender;
+    private void self(Player player) {
         if (player.getAllowFlight()) {
             player.setAllowFlight(false);
-            player.sendMessage(ChatColor.RED + "飞行模式已关闭");
             FLY_PLAYERS.remove(player);
+            Core.sendWarn(player, "飞行模式已关闭");
         } else {
             player.setAllowFlight(true);
-            player.sendMessage(ChatColor.GREEN + "飞行模式已开启");
             FLY_PLAYERS.add(player);
+            Core.sendSuccess(player, "飞行模式已开启");
         }
     }
+
+    private void switchFly(CommandSender sender, Player player, boolean allow) {
+        player.setAllowFlight(allow);
+        if (allow) {
+            FLY_PLAYERS.add(player);
+            Core.sendSuccess(sender, "已开启玩家(" + player.getName() + ")的飞行模式");
+            Core.sendSuccess(player, "已由管理员开启你的飞行模式");
+            Core.printWarn(Auxiliary.getFormatDate() + " --- 管理员: " + sender.getName() + ",开启了玩家: " + player.getName() + "的飞行模式");
+        } else {
+            FLY_PLAYERS.remove(player);
+            Core.sendSuccess(sender, "已关闭玩家(" + player.getName() + ")的飞行模式");
+            Core.sendWarn(player, "已由管理员关闭你的飞行模式");
+            Core.printWarn(Auxiliary.getFormatDate() + " --- 管理员: " + sender.getName() + ",关闭了玩家: " + player.getName() + "的飞行模式");
+        }
+    }
+
 }

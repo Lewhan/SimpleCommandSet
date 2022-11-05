@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FlyTabCompleter implements TabCompleter {
+public class GodAndFlyTabCompleter implements TabCompleter {
 
     /**
      * 参数提示
@@ -25,11 +25,7 @@ public class FlyTabCompleter implements TabCompleter {
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         ArrayList<String> list = new ArrayList<>();
         if (args.length == 1) {
-            Server server = sender.getServer();
-            ArrayList<? extends Player> players = new ArrayList<>(server.getOnlinePlayers());
-            for (Player player : players) {
-                list.add(player.getName());
-            }
+            sender.getServer().getOnlinePlayers().forEach(p -> list.add(p.getName()));
         } else if (args.length == 2) {
             list.add("on");
             list.add("off");
