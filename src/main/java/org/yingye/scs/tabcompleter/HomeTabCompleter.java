@@ -21,9 +21,7 @@ public class HomeTabCompleter implements TabCompleter {
         if (sender instanceof Player player && (alias.equalsIgnoreCase("home") || alias.equalsIgnoreCase("delhome"))) {
             if (args.length == 1) {
                 File homeFile = new File(Config.HOME.get("savePath").toString() + player.getName() + ".yml");
-                if (!homeFile.exists()) {
-                    return options;
-                } else {
+                if (homeFile.exists()) {
                     YamlConfiguration config = Config.getHomeConfig(player);
                     if (config != null) {
                         ConfigurationSection root = config.getConfigurationSection("home");

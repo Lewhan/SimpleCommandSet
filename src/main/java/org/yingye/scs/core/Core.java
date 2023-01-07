@@ -2,13 +2,14 @@ package org.yingye.scs.core;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.yingye.scs.command.*;
+import org.yingye.scs.immutable.Color;
 import org.yingye.scs.listener.*;
 import org.yingye.scs.tabcompleter.*;
 
@@ -24,6 +25,7 @@ public class Core extends JavaPlugin {
      */
     public static final String PLUGIN_TAG = "SimpleCommandSet";
     public static final String LOG_PREFIX = "[" + PLUGIN_TAG + "] ";
+    public static final Server SERVER = Bukkit.getServer();
 
     @Override
     public void onEnable() {
@@ -72,6 +74,7 @@ public class Core extends JavaPlugin {
 
         // fly
         getCommand("fly").setExecutor(new FlyCommand());
+        getCommand("flyspeed").setExecutor(new FlyCommand());
 
         // god
         getCommand("god").setExecutor(new GodCommand());
@@ -108,6 +111,7 @@ public class Core extends JavaPlugin {
         getCommand("tpclear").setTabCompleter(new EmptyTabCompleter());
 
         getCommand("fly").setTabCompleter(new GodAndFlyTabCompleter());
+        getCommand("flyspeed").setTabCompleter(new GodAndFlyTabCompleter());
 
         getCommand("god").setTabCompleter(new GodAndFlyTabCompleter());
 
@@ -151,8 +155,8 @@ public class Core extends JavaPlugin {
 
     public static void printSuccess(String message) {
         TextComponent text = Component.empty()
-                .children(List.of(Component.text(LOG_PREFIX, TextColor.fromCSSHexString("#FFFFFF")),
-                                Component.text(message, TextColor.fromCSSHexString("#55FF55"))
+                .children(List.of(Component.text(LOG_PREFIX, Color.NORMAL),
+                                Component.text(message, Color.LIGHT_GREEN)
                         )
                 );
         sender.sendMessage(text);
@@ -160,8 +164,8 @@ public class Core extends JavaPlugin {
 
     public static void printWarn(String message) {
         TextComponent text = Component.empty()
-                .children(List.of(Component.text(LOG_PREFIX, TextColor.fromCSSHexString("#FFFFFF")),
-                                Component.text(message, TextColor.fromCSSHexString("#FFFF55"))
+                .children(List.of(Component.text(LOG_PREFIX, Color.NORMAL),
+                                Component.text(message, Color.LIGHT_YELLOW)
                         )
                 );
         sender.sendMessage(text);
@@ -169,11 +173,15 @@ public class Core extends JavaPlugin {
 
     public static void printErr(String message) {
         TextComponent text = Component.empty()
-                .children(List.of(Component.text(LOG_PREFIX, TextColor.fromCSSHexString("#FFFFFF")),
-                                Component.text(message, TextColor.fromCSSHexString("#FF5555"))
+                .children(List.of(Component.text(LOG_PREFIX, Color.NORMAL),
+                                Component.text(message, Color.LIGHT_RED)
                         )
                 );
         sender.sendMessage(text);
+    }
+
+    public static void printTextComponent(TextComponent component) {
+        sender.sendMessage(component);
     }
 
     public static void sendInfo(CommandSender sender, String message) {
@@ -186,7 +194,7 @@ public class Core extends JavaPlugin {
 
     public static void sendSuccess(CommandSender sender, String message) {
         if (sender instanceof Player) {
-            sender.sendMessage(Component.text(message, TextColor.fromCSSHexString("#55FF55")));
+            sender.sendMessage(Component.text(message, Color.LIGHT_GREEN));
         } else {
             printSuccess(message);
         }
@@ -194,7 +202,7 @@ public class Core extends JavaPlugin {
 
     public static void sendWarn(CommandSender sender, String message) {
         if (sender instanceof Player) {
-            sender.sendMessage(Component.text(message, TextColor.fromCSSHexString("#FFFF55")));
+            sender.sendMessage(Component.text(message, Color.LIGHT_YELLOW));
         } else {
             printWarn(message);
         }
@@ -202,7 +210,7 @@ public class Core extends JavaPlugin {
 
     public static void sendErr(CommandSender sender, String message) {
         if (sender instanceof Player) {
-            sender.sendMessage(Component.text(message, TextColor.fromCSSHexString("#FF5555")));
+            sender.sendMessage(Component.text(message, Color.LIGHT_RED));
         } else {
             printErr(message);
         }

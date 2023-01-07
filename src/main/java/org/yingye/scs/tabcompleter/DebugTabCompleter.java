@@ -40,12 +40,12 @@ public class DebugTabCompleter implements TabCompleter {
     private List<String> consoleDataCompleter(CommandSender sender, String[] args) {
         List<String> complete = new ArrayList<>();
         if (args.length == 1) {
-            complete = List.of("all", "cllist", "flylist", "godlist", "limit", "ohklist");
+            complete = List.of("all", "homekeys", "limit", "cllist", "flylist", "godlist", "ohklist");
         } else if (args.length > 1) {
             String mode = args[0];
             if (DebugCommand.getOpCommand().contains(mode)) {
                 return complete;
-            } else if (args.length == 2 && (mode.equalsIgnoreCase("all") || mode.equalsIgnoreCase("limit"))) {
+            } else if (args.length == 2 && (mode.equalsIgnoreCase("all") || mode.equalsIgnoreCase("limit") || mode.equalsIgnoreCase("homekeys"))) {
                 complete = getAllPlayerConfig();
             }
         }
@@ -56,13 +56,14 @@ public class DebugTabCompleter implements TabCompleter {
         List<String> complete = new ArrayList<>();
         if (args.length == 1) {
             if (sender.isOp()) {
-                complete = List.of("all", "cllist", "flylist", "godlist", "limit", "ohklist");
+                complete = List.of("all", "homekeys", "limit", "cllist", "flylist", "godlist", "ohklist");
             } else {
-                complete = List.of("all", "limit");
+                complete = List.of("all", "homekeys", "limit");
             }
         } else if (args.length > 1) {
             if ((args.length == 2 && args[0].equalsIgnoreCase("all") && sender.isOp())
-                    || (args.length == 3 && args[0].equalsIgnoreCase("limit") && sender.isOp())) {
+                    || (args.length == 3 && args[0].equalsIgnoreCase("limit") && sender.isOp())
+                    || (args.length == 2 && args[0].equalsIgnoreCase("homekeys") && sender.isOp())) {
                 complete = getAllPlayerConfig();
             }
         }

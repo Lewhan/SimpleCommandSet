@@ -1,4 +1,4 @@
-package org.yingye.scs.enums;
+package org.yingye.scs.immutable;
 
 public enum SenderIdentity {
 

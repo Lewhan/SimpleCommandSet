@@ -1,22 +1,22 @@
 package org.yingye.scs.command;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.yingye.scs.core.Core;
-import org.yingye.scs.enums.SenderIdentity;
+import org.yingye.scs.immutable.SenderIdentity;
 import org.yingye.scs.util.Auxiliary;
 import org.yingye.scs.util.BukkitTool;
 
 import java.util.HashSet;
 import java.util.List;
 
-@SuppressWarnings("all")
 public class GodCommand implements CommandExecutor {
 
     private static final HashSet<Player> GOD_PLAYERS = new HashSet<>();
@@ -26,7 +26,7 @@ public class GodCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         SenderIdentity identity = BukkitTool.getSenderIdentity(sender);
         if (args.length == 0 && identity == SenderIdentity.CONSOLE) {
             Core.printErr("无参数模式只能由玩家使用");
@@ -93,12 +93,16 @@ public class GodCommand implements CommandExecutor {
     }
 
     private void now(Player player) {
-        List<Entity> entities = Bukkit.getServer().getWorld(player.getLocation().getWorld().getName()).getEntities();
-        for (Entity entity : entities) {
-            if (entity instanceof Mob) {
-                Mob mob = (Mob) entity;
-                if (mob.getTarget() == player) {
-                    mob.setTarget(null);
+        World world = Bukkit.getServer().getWorld(player.getLocation().getWorld().getName());
+        if(world == null) {
+            Core.sendErr(player, "所在世界获取失败, 未能清除生物注视");
+        } else {
+            List<Entity> entities = world.getEntities();
+            for (Entity entity : entities) {
+                if (entity instanceof Mob mob) {
+                    if (mob.getTarget() == player) {
+                        mob.setTarget(null);
+                    }
                 }
             }
         }

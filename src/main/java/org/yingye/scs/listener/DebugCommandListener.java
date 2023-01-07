@@ -23,7 +23,7 @@ public class DebugCommandListener implements Listener {
     public void oneHitKillListener(EntityDamageByEntityEvent event) {
         Entity source = event.getDamager();
         if (source instanceof Player && event.getEntity() instanceof Mob) {
-            if (DebugCommand.getHerclues().contains(source)) {
+            if (DebugCommand.getHeracles().contains(source)) {
                 // 让伤害计算完了再清空血量，不然不会掉落经验值
                 new BukkitRunnable() {
                     @Override

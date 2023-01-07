@@ -23,7 +23,10 @@ commands:
     permission: scs.back
 
   fly:
-    permission: scs.fly
+    permission: scs.fly.fly
+
+  flyspeed:
+    permission: scs.fly.flyspeed
 
   god:
     permission: scs.god
@@ -88,15 +91,17 @@ permissions:
     children:
       world: true
       weather.*: true
-
   scs.world.weather.*:
     weatherinfo: true
     weatherlock: true
     weatherunlock: true
-
   scs.other.*:
     children:
       remake: true
+  scs.fly.*:
+    children:
+      fly: true
+      flyspeed: true
 
   # tpa
   scs.tpa.tpa:
@@ -133,7 +138,9 @@ permissions:
     default: true
 
   # fly
-  scs.fly:
+  scs.fly.fly:
+    default: op
+  scs.fly.flyspeed:
     default: op
 
   # god

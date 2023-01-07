@@ -21,7 +21,7 @@ public class OtherCommand implements CommandExecutor {
 
     private void remake(@NotNull CommandSender sender) {
         if (sender instanceof Player player) {
-            player.sendMessage(ChatColor.GREEN + "如你所愿");
+            Core.sendSuccess(player, "如你所愿");
             player.setHealth(0.0);
         } else {
             Core.printErr("该命令只能由玩家执行");

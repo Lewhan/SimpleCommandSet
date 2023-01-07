@@ -11,6 +11,6 @@ import java.util.List;
 public class EmptyTabCompleter implements TabCompleter {
     @Override
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
-        return new ArrayList<>();
+        return List.of();
     }
 }

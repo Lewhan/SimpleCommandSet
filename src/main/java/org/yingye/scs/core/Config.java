@@ -18,6 +18,7 @@ public class Config {
     public static final HashMap<String, Integer> TELEPORT = new HashMap<>(Map.of("waitTime", 3, "cdTime", 5, "timeout", 60));
     public static final HashMap<String, Object> HOME = new HashMap<>(Map.of("savePath", "./plugins/SimpleCommandSet/data/"));
     public static final HashMap<String, Integer> WEATHER = new HashMap<>(Map.of("switchSecond", 600));
+    public static final int TAB_SIZE = 4;
 
     public static void loadConfig() {
         BufferedWriter bw;
@@ -121,11 +122,12 @@ public class Config {
         return new File(HOME.get("savePath").toString() + name + ".yml");
     }
 
-    @SuppressWarnings("all")
     public static YamlConfiguration getHomeConfig(Player player) {
         File dir = new File(HOME.get("savePath").toString());
         if (!dir.exists()) {
-            dir.mkdirs();
+            if (!dir.mkdirs()) {
+                Core.printErr("玩家数据存放文件夹创建失败! 文件夹路径: " + dir.getAbsolutePath());
+            }
         }
         // 文件可能不存在
         File homeFile = getPlayerConfigFile(player.getName());
@@ -141,8 +143,7 @@ public class Config {
         }
     }
 
-    @SuppressWarnings("all")
-    private static YamlConfiguration map2YamlConfiguration(Map<String, Map<String, Map>> source) {
+    private static YamlConfiguration map2YamlConfiguration(Map<String, Map<String, Map<String, Object>>> source) {
         YamlConfiguration configuration = new YamlConfiguration();
         if (source.get("home") == null) {
             configuration.createSection("home");
@@ -159,7 +160,7 @@ public class Config {
         return configuration;
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     private static YamlConfiguration checkConfigAvailability(File file, Player player) {
         // 如果配置文件不存在则给出一个空的map
         if (!file.exists()) {
@@ -168,7 +169,7 @@ public class Config {
         Yaml yaml = new Yaml();
         try {
             // 因为读取出的Map的泛型不确定，所以会报unchecked的警告
-            Map<String, Map<String, Map>> map = yaml.loadAs(new FileInputStream(file), Map.class);
+            Map<String, Map<String, Map<String, Object>>> map = yaml.loadAs(new FileInputStream(file), Map.class);
 
             if (map == null) {
                 // 如果配置文件是个空文件，也给出一个空的map
@@ -178,30 +179,30 @@ public class Config {
                 StringBuilder sb = new StringBuilder();
 
                 if (map.containsKey("home")) {
-                    Map<String, Map> homeMap = map.get("home");
+                    Map<String, Map<String, Object>> homeMap = map.get("home");
                     if (homeMap != null && !homeMap.isEmpty()) {
                         Set<String> homeKeys = homeMap.keySet();
                         for (String key : homeKeys) {
                             if (BukkitTool.createLocation(server, homeMap.get(key)) == null) {
                                 homeMap.remove(key);
-                                sb.append(ChatColor.RED + "家:( " + ChatColor.AQUA + key + ChatColor.RED + " )" + "所在的世界已不存在，从home中移除\n");
+                                sb.append(ChatColor.RED).append("家").append(ChatColor.AQUA).append(key).append(ChatColor.RED).append("所在的世界已不存在，从home中移除\n");
                             }
                         }
                     }
                 }
 
                 if (map.containsKey("back")) {
-                    Map<String, Map> backMap = map.get("back");
+                    Map<String, Map<String, Object>> backMap = map.get("back");
                     if (backMap != null && !backMap.isEmpty()) {
                         if (BukkitTool.createLocation(server, backMap.get("back")) == null) {
                             backMap.remove("back");
-                            sb.append(ChatColor.RED + "返回点所在的世界已不存在，已移除");
+                            sb.append(ChatColor.RED).append("返回点所在的世界已不存在，已移除");
                         }
                     }
                 }
 
                 if (!sb.toString().equals("")) {
-                    player.sendMessage(ChatColor.RED + sb.toString());
+                    Core.sendErr(player, sb.toString());
                 }
 
                 YamlConfiguration parse = map2YamlConfiguration(map);

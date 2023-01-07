@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import org.yingye.scs.core.Config;
 import org.yingye.scs.core.Core;
 
@@ -44,9 +45,8 @@ public class TeleportCommand implements CommandExecutor {
      * @param args    参数,args不会为空,args索引从0开始,且其中不包括输入的命令
      * @return 是否回显
      */
-    @SuppressWarnings("all")
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         // 判断是不是从控制台输入的
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + " 该命令只能由玩家使用");

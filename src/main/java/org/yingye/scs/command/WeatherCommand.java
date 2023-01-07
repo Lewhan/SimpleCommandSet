@@ -7,9 +7,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import org.yingye.scs.core.Config;
 import org.yingye.scs.core.Core;
-import org.yingye.scs.enums.WeatherStatus;
+import org.yingye.scs.immutable.WeatherStatus;
 import org.yingye.scs.util.Auxiliary;
 
 import java.util.HashMap;
@@ -35,13 +36,12 @@ public class WeatherCommand implements CommandExecutor {
      * @param args    参数
      * @return 是否回显
      */
-    @SuppressWarnings("all")
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (label.equalsIgnoreCase("weatherlock") || label.equalsIgnoreCase("simplecommandset:weatherlock")) {
             weatherLock(sender, args);
         } else if (label.equals("weatherunlock") || label.equalsIgnoreCase("simplecommandset:weatherunlock")) {
-            if (args.length <= 0) {
+            if (args.length == 0) {
                 if (sender instanceof Player) {
                     weatherUnlock(sender, ((Player) sender).getWorld());
                 }
@@ -75,25 +75,22 @@ public class WeatherCommand implements CommandExecutor {
      * @param args   参数
      */
     private void weatherLockByConsole(CommandSender sender, String[] args) {
-        if (args.length <= 0) {
+        if (args.length == 0) {
             sender.sendMessage(ChatColor.RED + "缺少必要参数: " + ChatColor.GREEN + "worldName [weather]");
-            return;
-        }
-
-        if (args.length == 1) {
+        } else if (args.length == 1) {
             World world = sender.getServer().getWorld(args[0]);
             if (world == null) {
                 sender.sendMessage(ChatColor.RED + "输入的世界名无效，未找到该世界");
-                return;
+            } else {
+                weatherLock(sender, world);
             }
-            weatherLock(sender, world);
         } else {
             World world = sender.getServer().getWorld(args[0]);
             if (world == null) {
                 sender.sendMessage(ChatColor.RED + "输入的世界名无效，未找到该世界");
-                return;
+            } else {
+                weatherLock(sender, world, args[1]);
             }
-            weatherLock(sender, world, args[1]);
         }
     }
 
@@ -105,7 +102,7 @@ public class WeatherCommand implements CommandExecutor {
      */
     private void weatherLockByOperator(Player player, String[] args) {
         World world;
-        if (args.length <= 0) {
+        if (args.length == 0) {
             world = player.getWorld();
         } else {
             world = player.getServer().getWorld(args[0]);
@@ -115,7 +112,7 @@ public class WeatherCommand implements CommandExecutor {
             }
         }
 
-        if (args.length == 0 || args.length == 1) {
+        if (args.length < 2) {
             weatherLock(player, world);
         } else {
             weatherLock(player, world, args[1]);
@@ -221,7 +218,7 @@ public class WeatherCommand implements CommandExecutor {
 
 
     private void weatherInfo(CommandSender sender, String[] args) {
-        if (args.length <= 0) {
+        if (args.length == 0) {
             currentWeatherInfo(sender);
         } else {
             worldWeatherInfo(sender, args[0]);

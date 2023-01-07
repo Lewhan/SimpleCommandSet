@@ -9,15 +9,14 @@ plugins {
 
 repositories {
     maven {
-        url = uri("https://papermc.io/repo/repository/maven-public/")
+        url = uri("https://repo.papermc.io/repository/maven-public/")
     }
-
     mavenCentral()
 }
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0-rc3'
+    compileOnly "org.jetbrains:annotations:22.0.0"
 }
 
 java {
@@ -37,3 +36,4 @@ task fatJar(type: Jar) {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+
